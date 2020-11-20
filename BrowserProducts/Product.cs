@@ -28,10 +28,30 @@ namespace BrowserProducts
         public string Style { get; set;}
         public int ProductSubcategory { get; set;}
         public int ProductModelId { get; set;}
-        public DateTime SellStartDate { get; set; }
+        public DateTime SellStartDate { get; set; } 
         public DateTime SellEndDate { get; set; }
         public DateTime DiscontinuedDate { get; set; }
         public DateTime ModifiedDate { get; set; }
+        public string Description { get; set; }
 
+        public override string ToString()
+        {
+            return $"{Name} --- {Description}";
+        }
+
+        public string ToStringWithDate()
+        {
+            return $"{Name} --- {Description} from {SellStartDate.ToString("dd/MM/yyyy")} ---- {VerifySellEndDate()}";
+        }
+
+        //Formatting SellEndDate in Null Case or not
+        private string VerifySellEndDate()
+        {
+            if (SellEndDate.ToString() == "01/01/0001 00:00:00")
+            {
+                return ("Still Avaliable");
+            }
+            return SellEndDate.ToString("dd/MM/yyyy");
+        }
     }
 }

@@ -14,33 +14,66 @@ namespace BrowserProducts
     public partial class browserProducts : Form
     {
         DataAccess db = new DataAccess();
-
-        //List<Product> products = new List<Product>();
+        BindingList<Product> products = new BindingList<Product>();
+        string language = "en";
 
         public browserProducts()
         {
-            InitializeComponent();
-    
-
+            InitializeComponent();  
         }
 
-        private string setLanguage()
+        public void setLanguage()
         {
-
-
-            string lng = engRadioButton.Checked != true ? "fr" : "en";
-            return lng;
+           language = engRadioButton.Checked != true ? "fr" : "en";
         }
 
         private void browserProducts_Load(object sender, EventArgs e)
         {
             engRadioButton.Checked = true;
-            db.GetProducts(productsDataGridView,setLanguage());
+            db.GetProducts(productsListView,language);
+            db.GetCategories(catComboBox);
         }
 
         private void fraRadioButton_CheckedChanged(object sender, EventArgs e)
         {
-            db.GetProducts(productsDataGridView, setLanguage());
+            setLanguage();
+            db.GetProducts(productsListView,language);
+        }
+
+       
+
+        private void catComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            db.GetProductsbyCategory(productsListView,catComboBox.SelectedItem.ToString(),language);
+            db.GetSubCategories(subCatComboBox, catComboBox.SelectedItem.ToString());
+        }
+
+        private void avaliableCheckBox_CheckStateChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void engRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            setLanguage();
+            db.GetProducts(productsListView, language);
+        }
+
+        private void subCatComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            db.GetProductsbySubcategory(productsListView, subCatComboBox.SelectedItem.ToString(), language);
+        }
+
+        private void avaliableCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (avaliableCheckBox.Checked)
+            {
+                db.GetAvaliableProducts(productsListView,language);
+            }
+            else
+            {
+                db.GetProductsWithSellerDates(productsListView, language);
+            }
         }
     }
 }
