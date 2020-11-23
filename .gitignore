@@ -3,7 +3,7 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
-#App.config has personal credentials. It will figure trusted connection out...
+# App.config has personal credentials. It will figure trusted connection out...
 App.config
 
 # User-specific files

@@ -8,7 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Dapper;
-using BrowserProducts;
 
 
 namespace BrowserProducts
@@ -17,23 +16,39 @@ namespace BrowserProducts
     {
 
         // method to getProducts into ListView by a stored procedure 
-        public void GetProducts(ListView lv,string language)
+        public int CountProducts(string language)
         {
+
             using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.CnnVal("AdventureWorks2016")))
             {
                 string procedure = $"Production.spAllProducts '{language}'";
+                List<Product> products = new List<Product>();
 
+                products = connection.Query<Product>(procedure).ToList();
+                int totalProducts = products.Count();
+
+                return totalProducts;
+
+            }
+        }
+
+        public void GetProducts(ListView lv, string language, int productsPerPage, int currentPage)
+        {
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.CnnVal("AdventureWorks2016")))
+            {
+                string procedure = $"exec Production.spAllProductsPerPage '{language}',{currentPage * productsPerPage},{productsPerPage}";
                 List<Product> products = new List<Product>();
                 products = connection.Query<Product>(procedure).ToList();
+                lv.Items.Clear();
                 foreach (Product p in products)
                 {
                     lv.Items.Add(p.ToString());
                 }
             }
         }
-        
+
                 //put all the categories of the products in a combobox
-                public void GetCategories(ComboBox cb)
+        public void GetCategories(ComboBox cb)
                 {
                     using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.CnnVal("AdventureWorks2016")))
                     {
@@ -72,6 +87,7 @@ namespace BrowserProducts
                 string procedure = $"Production.spProductsByCategories '{category}','{language}'";
                 List<Product> products = new List<Product>();
                 products = connection.Query<Product>(procedure).ToList();
+                int totalProducts = products.Count();
                 lv.Items.Clear();
                 foreach (Product p in products)
                 {
@@ -88,6 +104,7 @@ namespace BrowserProducts
                 string procedure = $"Production.spProductsBySubcategories '{subcategory}','{language}'";
                 List<Product> products = new List<Product>();
                 products = connection.Query<Product>(procedure).ToList();
+                int totalProducts = products.Count();
                 lv.Items.Clear();
                 foreach (Product p in products)
                 {
@@ -105,6 +122,7 @@ namespace BrowserProducts
 
                 List<Product> products = new List<Product>();
                 products = connection.Query<Product>(procedure).ToList();
+                int totalProducts = products.Count();
                 lv.Items.Clear();
                 foreach (Product p in products)
                 {
@@ -121,6 +139,7 @@ namespace BrowserProducts
 
                 List<Product> products = new List<Product>();
                 products = connection.Query<Product>(procedure).ToList();
+                int totalProducts = products.Count();
                 lv.Items.Clear();
                 foreach (Product p in products)
                 {
