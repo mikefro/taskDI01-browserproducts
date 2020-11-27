@@ -60,9 +60,9 @@
             this.produtctLineLabel = new System.Windows.Forms.Label();
             this.styleLabel = new System.Windows.Forms.Label();
             this.orderByGroupBox = new System.Windows.Forms.GroupBox();
-            this.sellEndDateradioButton = new System.Windows.Forms.RadioButton();
-            this.lowPriceradioButton = new System.Windows.Forms.RadioButton();
-            this.orderByNameAscradioButton = new System.Windows.Forms.RadioButton();
+            this.sellEndDateRadioButton = new System.Windows.Forms.RadioButton();
+            this.lowPriceRadioButton = new System.Windows.Forms.RadioButton();
+            this.orderByNameRadioButton = new System.Windows.Forms.RadioButton();
             this.searchGroupBox = new System.Windows.Forms.GroupBox();
             this.modelNamelRadioButton = new System.Windows.Forms.RadioButton();
             this.productNameRadioButton = new System.Windows.Forms.RadioButton();
@@ -86,7 +86,7 @@
             this.catalogGroupBox.Controls.Add(this.productsListView);
             this.catalogGroupBox.Location = new System.Drawing.Point(24, 88);
             this.catalogGroupBox.Name = "catalogGroupBox";
-            this.catalogGroupBox.Size = new System.Drawing.Size(810, 666);
+            this.catalogGroupBox.Size = new System.Drawing.Size(810, 576);
             this.catalogGroupBox.TabIndex = 0;
             this.catalogGroupBox.TabStop = false;
             this.catalogGroupBox.Text = "Catalog";
@@ -94,14 +94,14 @@
             // currentPageTotalPagesLabel
             // 
             this.currentPageTotalPagesLabel.AutoSize = true;
-            this.currentPageTotalPagesLabel.Location = new System.Drawing.Point(381, 618);
+            this.currentPageTotalPagesLabel.Location = new System.Drawing.Point(403, 521);
             this.currentPageTotalPagesLabel.Name = "currentPageTotalPagesLabel";
             this.currentPageTotalPagesLabel.Size = new System.Drawing.Size(0, 13);
             this.currentPageTotalPagesLabel.TabIndex = 6;
             // 
             // nextPageButton
             // 
-            this.nextPageButton.Location = new System.Drawing.Point(504, 598);
+            this.nextPageButton.Location = new System.Drawing.Point(504, 501);
             this.nextPageButton.Name = "nextPageButton";
             this.nextPageButton.Size = new System.Drawing.Size(285, 53);
             this.nextPageButton.TabIndex = 5;
@@ -111,7 +111,7 @@
             // 
             // previousPageButton
             // 
-            this.previousPageButton.Location = new System.Drawing.Point(15, 598);
+            this.previousPageButton.Location = new System.Drawing.Point(15, 501);
             this.previousPageButton.Name = "previousPageButton";
             this.previousPageButton.Size = new System.Drawing.Size(285, 53);
             this.previousPageButton.TabIndex = 4;
@@ -155,10 +155,11 @@
             this.productsListView.Location = new System.Drawing.Point(15, 55);
             this.productsListView.MultiSelect = false;
             this.productsListView.Name = "productsListView";
-            this.productsListView.Size = new System.Drawing.Size(775, 537);
+            this.productsListView.Size = new System.Drawing.Size(775, 424);
             this.productsListView.TabIndex = 0;
             this.productsListView.UseCompatibleStateImageBehavior = false;
             this.productsListView.View = System.Windows.Forms.View.List;
+            this.productsListView.DoubleClick += new System.EventHandler(this.productsListView_DoubleClick);
             // 
             // categoriesGroupBox
             // 
@@ -170,12 +171,10 @@
             this.categoriesGroupBox.Controls.Add(this.avaliableCheckBox);
             this.categoriesGroupBox.Location = new System.Drawing.Point(850, 88);
             this.categoriesGroupBox.Name = "categoriesGroupBox";
-            this.categoriesGroupBox.Size = new System.Drawing.Size(295, 182);
+            this.categoriesGroupBox.Size = new System.Drawing.Size(295, 161);
             this.categoriesGroupBox.TabIndex = 1;
             this.categoriesGroupBox.TabStop = false;
             this.categoriesGroupBox.Text = "Categories";
-            this.categoriesGroupBox.Enter += new System.EventHandler(this.categoriesGroupBox_Enter);
-            this.categoriesGroupBox.Leave += new System.EventHandler(this.categoriesGroupBox_Leave);
             // 
             // subCatComboBox
             // 
@@ -215,7 +214,7 @@
             // avaliableLabel
             // 
             this.avaliableLabel.AutoSize = true;
-            this.avaliableLabel.Location = new System.Drawing.Point(21, 130);
+            this.avaliableLabel.Location = new System.Drawing.Point(21, 114);
             this.avaliableLabel.Name = "avaliableLabel";
             this.avaliableLabel.Size = new System.Drawing.Size(95, 13);
             this.avaliableLabel.TabIndex = 11;
@@ -224,17 +223,16 @@
             // avaliableCheckBox
             // 
             this.avaliableCheckBox.AutoSize = true;
-            this.avaliableCheckBox.Location = new System.Drawing.Point(214, 130);
+            this.avaliableCheckBox.Location = new System.Drawing.Point(214, 113);
             this.avaliableCheckBox.Name = "avaliableCheckBox";
             this.avaliableCheckBox.Size = new System.Drawing.Size(15, 14);
             this.avaliableCheckBox.TabIndex = 10;
             this.avaliableCheckBox.UseVisualStyleBackColor = true;
-            this.avaliableCheckBox.CheckedChanged += new System.EventHandler(this.avaliableCheckBox_CheckedChanged_1);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(194, 195);
+            this.label1.Location = new System.Drawing.Point(194, 145);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(10, 13);
             this.label1.TabIndex = 7;
@@ -242,7 +240,7 @@
             // 
             // maxPriceTextBox
             // 
-            this.maxPriceTextBox.Location = new System.Drawing.Point(217, 192);
+            this.maxPriceTextBox.Location = new System.Drawing.Point(217, 142);
             this.maxPriceTextBox.Name = "maxPriceTextBox";
             this.maxPriceTextBox.Size = new System.Drawing.Size(53, 20);
             this.maxPriceTextBox.TabIndex = 6;
@@ -250,7 +248,7 @@
             // 
             // minPriceTextBox
             // 
-            this.minPriceTextBox.Location = new System.Drawing.Point(135, 192);
+            this.minPriceTextBox.Location = new System.Drawing.Point(135, 142);
             this.minPriceTextBox.Name = "minPriceTextBox";
             this.minPriceTextBox.Size = new System.Drawing.Size(53, 20);
             this.minPriceTextBox.TabIndex = 5;
@@ -259,7 +257,7 @@
             // priceLabel
             // 
             this.priceLabel.AutoSize = true;
-            this.priceLabel.Location = new System.Drawing.Point(36, 195);
+            this.priceLabel.Location = new System.Drawing.Point(36, 145);
             this.priceLabel.Name = "priceLabel";
             this.priceLabel.Size = new System.Drawing.Size(31, 13);
             this.priceLabel.TabIndex = 4;
@@ -313,19 +311,17 @@
             this.filterGroupBox.Controls.Add(this.maxPriceTextBox);
             this.filterGroupBox.Controls.Add(this.minPriceTextBox);
             this.filterGroupBox.Controls.Add(this.priceLabel);
-            this.filterGroupBox.Location = new System.Drawing.Point(853, 285);
+            this.filterGroupBox.Location = new System.Drawing.Point(853, 262);
             this.filterGroupBox.Name = "filterGroupBox";
-            this.filterGroupBox.Size = new System.Drawing.Size(292, 305);
+            this.filterGroupBox.Size = new System.Drawing.Size(292, 242);
             this.filterGroupBox.TabIndex = 6;
             this.filterGroupBox.TabStop = false;
             this.filterGroupBox.Text = "Filters";
-            this.filterGroupBox.Enter += new System.EventHandler(this.filterGroupBox_Enter);
-            this.filterGroupBox.Leave += new System.EventHandler(this.filterGroupBox_Leave);
             // 
             // colorComboBox
             // 
             this.colorComboBox.FormattingEnabled = true;
-            this.colorComboBox.Location = new System.Drawing.Point(135, 45);
+            this.colorComboBox.Location = new System.Drawing.Point(135, 30);
             this.colorComboBox.Name = "colorComboBox";
             this.colorComboBox.Size = new System.Drawing.Size(135, 21);
             this.colorComboBox.TabIndex = 21;
@@ -333,7 +329,7 @@
             // colorLabel
             // 
             this.colorLabel.AutoSize = true;
-            this.colorLabel.Location = new System.Drawing.Point(36, 50);
+            this.colorLabel.Location = new System.Drawing.Point(36, 35);
             this.colorLabel.Name = "colorLabel";
             this.colorLabel.Size = new System.Drawing.Size(31, 13);
             this.colorLabel.TabIndex = 20;
@@ -341,7 +337,7 @@
             // 
             // resetFilterButton
             // 
-            this.resetFilterButton.Location = new System.Drawing.Point(180, 246);
+            this.resetFilterButton.Location = new System.Drawing.Point(175, 187);
             this.resetFilterButton.Name = "resetFilterButton";
             this.resetFilterButton.Size = new System.Drawing.Size(84, 37);
             this.resetFilterButton.TabIndex = 19;
@@ -351,7 +347,7 @@
             // 
             // applyFilterButton
             // 
-            this.applyFilterButton.Location = new System.Drawing.Point(42, 245);
+            this.applyFilterButton.Location = new System.Drawing.Point(37, 186);
             this.applyFilterButton.Name = "applyFilterButton";
             this.applyFilterButton.Size = new System.Drawing.Size(84, 37);
             this.applyFilterButton.TabIndex = 18;
@@ -362,7 +358,7 @@
             // productLineComboBox
             // 
             this.productLineComboBox.FormattingEnabled = true;
-            this.productLineComboBox.Location = new System.Drawing.Point(135, 137);
+            this.productLineComboBox.Location = new System.Drawing.Point(135, 101);
             this.productLineComboBox.Name = "productLineComboBox";
             this.productLineComboBox.Size = new System.Drawing.Size(135, 21);
             this.productLineComboBox.TabIndex = 17;
@@ -370,7 +366,7 @@
             // styleComboBox
             // 
             this.styleComboBox.FormattingEnabled = true;
-            this.styleComboBox.Location = new System.Drawing.Point(135, 90);
+            this.styleComboBox.Location = new System.Drawing.Point(135, 65);
             this.styleComboBox.Name = "styleComboBox";
             this.styleComboBox.Size = new System.Drawing.Size(135, 21);
             this.styleComboBox.TabIndex = 16;
@@ -378,7 +374,7 @@
             // produtctLineLabel
             // 
             this.produtctLineLabel.AutoSize = true;
-            this.produtctLineLabel.Location = new System.Drawing.Point(32, 145);
+            this.produtctLineLabel.Location = new System.Drawing.Point(36, 109);
             this.produtctLineLabel.Name = "produtctLineLabel";
             this.produtctLineLabel.Size = new System.Drawing.Size(67, 13);
             this.produtctLineLabel.TabIndex = 14;
@@ -387,7 +383,7 @@
             // styleLabel
             // 
             this.styleLabel.AutoSize = true;
-            this.styleLabel.Location = new System.Drawing.Point(32, 98);
+            this.styleLabel.Location = new System.Drawing.Point(36, 73);
             this.styleLabel.Name = "styleLabel";
             this.styleLabel.Size = new System.Drawing.Size(30, 13);
             this.styleLabel.TabIndex = 13;
@@ -395,49 +391,47 @@
             // 
             // orderByGroupBox
             // 
-            this.orderByGroupBox.Controls.Add(this.sellEndDateradioButton);
-            this.orderByGroupBox.Controls.Add(this.lowPriceradioButton);
-            this.orderByGroupBox.Controls.Add(this.orderByNameAscradioButton);
-            this.orderByGroupBox.Location = new System.Drawing.Point(859, 609);
+            this.orderByGroupBox.Controls.Add(this.sellEndDateRadioButton);
+            this.orderByGroupBox.Controls.Add(this.lowPriceRadioButton);
+            this.orderByGroupBox.Controls.Add(this.orderByNameRadioButton);
+            this.orderByGroupBox.Location = new System.Drawing.Point(860, 520);
             this.orderByGroupBox.Name = "orderByGroupBox";
             this.orderByGroupBox.Size = new System.Drawing.Size(285, 144);
             this.orderByGroupBox.TabIndex = 7;
             this.orderByGroupBox.TabStop = false;
             this.orderByGroupBox.Text = "Order by";
             // 
-            // sellEndDateradioButton
+            // sellEndDateRadioButton
             // 
-            this.sellEndDateradioButton.AutoSize = true;
-            this.sellEndDateradioButton.Location = new System.Drawing.Point(97, 111);
-            this.sellEndDateradioButton.Name = "sellEndDateradioButton";
-            this.sellEndDateradioButton.Size = new System.Drawing.Size(139, 17);
-            this.sellEndDateradioButton.TabIndex = 2;
-            this.sellEndDateradioButton.TabStop = true;
-            this.sellEndDateradioButton.Text = "Sell end date ascending";
-            this.sellEndDateradioButton.UseVisualStyleBackColor = true;
+            this.sellEndDateRadioButton.AutoSize = true;
+            this.sellEndDateRadioButton.Location = new System.Drawing.Point(97, 111);
+            this.sellEndDateRadioButton.Name = "sellEndDateRadioButton";
+            this.sellEndDateRadioButton.Size = new System.Drawing.Size(139, 17);
+            this.sellEndDateRadioButton.TabIndex = 2;
+            this.sellEndDateRadioButton.Text = "Sell end date ascending";
+            this.sellEndDateRadioButton.UseVisualStyleBackColor = true;
             // 
-            // lowPriceradioButton
+            // lowPriceRadioButton
             // 
-            this.lowPriceradioButton.AutoSize = true;
-            this.lowPriceradioButton.Location = new System.Drawing.Point(97, 68);
-            this.lowPriceradioButton.Name = "lowPriceradioButton";
-            this.lowPriceradioButton.Size = new System.Drawing.Size(136, 17);
-            this.lowPriceradioButton.TabIndex = 1;
-            this.lowPriceradioButton.TabStop = true;
-            this.lowPriceradioButton.Text = "Low Price ... High Price";
-            this.lowPriceradioButton.UseVisualStyleBackColor = true;
+            this.lowPriceRadioButton.AutoSize = true;
+            this.lowPriceRadioButton.Location = new System.Drawing.Point(97, 68);
+            this.lowPriceRadioButton.Name = "lowPriceRadioButton";
+            this.lowPriceRadioButton.Size = new System.Drawing.Size(136, 17);
+            this.lowPriceRadioButton.TabIndex = 1;
+            this.lowPriceRadioButton.Text = "Low Price ... High Price";
+            this.lowPriceRadioButton.UseVisualStyleBackColor = true;
             // 
-            // orderByNameAscradioButton
+            // orderByNameRadioButton
             // 
-            this.orderByNameAscradioButton.AutoSize = true;
-            this.orderByNameAscradioButton.Checked = true;
-            this.orderByNameAscradioButton.Location = new System.Drawing.Point(97, 30);
-            this.orderByNameAscradioButton.Name = "orderByNameAscradioButton";
-            this.orderByNameAscradioButton.Size = new System.Drawing.Size(73, 17);
-            this.orderByNameAscradioButton.TabIndex = 0;
-            this.orderByNameAscradioButton.TabStop = true;
-            this.orderByNameAscradioButton.Text = "Name A-Z";
-            this.orderByNameAscradioButton.UseVisualStyleBackColor = true;
+            this.orderByNameRadioButton.AutoSize = true;
+            this.orderByNameRadioButton.Checked = true;
+            this.orderByNameRadioButton.Location = new System.Drawing.Point(97, 30);
+            this.orderByNameRadioButton.Name = "orderByNameRadioButton";
+            this.orderByNameRadioButton.Size = new System.Drawing.Size(73, 17);
+            this.orderByNameRadioButton.TabIndex = 0;
+            this.orderByNameRadioButton.TabStop = true;
+            this.orderByNameRadioButton.Text = "Name A-Z";
+            this.orderByNameRadioButton.UseVisualStyleBackColor = true;
             // 
             // searchGroupBox
             // 
@@ -496,7 +490,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1172, 772);
+            this.ClientSize = new System.Drawing.Size(1174, 689);
             this.Controls.Add(this.searchGroupBox);
             this.Controls.Add(this.orderByGroupBox);
             this.Controls.Add(this.filterGroupBox);
@@ -556,9 +550,9 @@
         private System.Windows.Forms.Label avaliableLabel;
         private System.Windows.Forms.CheckBox avaliableCheckBox;
         private System.Windows.Forms.GroupBox orderByGroupBox;
-        private System.Windows.Forms.RadioButton sellEndDateradioButton;
-        private System.Windows.Forms.RadioButton lowPriceradioButton;
-        private System.Windows.Forms.RadioButton orderByNameAscradioButton;
+        private System.Windows.Forms.RadioButton sellEndDateRadioButton;
+        private System.Windows.Forms.RadioButton lowPriceRadioButton;
+        private System.Windows.Forms.RadioButton orderByNameRadioButton;
         private System.Windows.Forms.GroupBox searchGroupBox;
         private System.Windows.Forms.RadioButton modelNamelRadioButton;
         private System.Windows.Forms.RadioButton productNameRadioButton;

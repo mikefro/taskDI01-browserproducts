@@ -1,10 +1,7 @@
 ﻿using Dapper;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Data.SqlClient;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,15 +17,15 @@ namespace BrowserProducts
         int totalProducts;
         int productsPerPage;
         int numberOfPages;
-        int currentPage = 0;
+        int currentPage;
 
-        private string mainquery;
+        private string finalQuery;
+        private string queryProductsWithSellDates;
+        private string queryOnlyAvaliableProducts;
         private int minPrice;
         private int maxPrice;
         private string priceClause;
-        private string colorClause;
-        private string productLineClause;
-        private string styleClause;
+        private string orderBy;
 
         // get if the filters has been reset
         private bool resetFilterButtonClicked = false;
@@ -36,14 +33,12 @@ namespace BrowserProducts
 
         public browserProducts()
         {
-            InitializeComponent();  
-
-              
+            InitializeComponent();
         }
 
         private void browserProducts_Load(object sender, EventArgs e)
         {
-            
+
             productsForPageCombobox.SelectedIndex = 0;
             productsPerPage = int.Parse(productsForPageCombobox.SelectedItem.ToString());
             previousPageButton.Enabled = false;
@@ -56,6 +51,7 @@ namespace BrowserProducts
             LoadProductLineComboBox();
             SetLanguage();
             ResetPaging();
+
         }
 
         //Set the ListView for a vertical scroll
@@ -75,7 +71,7 @@ namespace BrowserProducts
         private void LoadCatComboBox()
         {
             List<string> categories = db.GetCategories();
-            foreach( string cat in categories)
+            foreach (string cat in categories)
             {
                 catComboBox.Items.Add(cat);
             }
@@ -91,7 +87,7 @@ namespace BrowserProducts
                     colorComboBox.Items.Add(color);
                 else
                     colorComboBox.Items.Add("null");
-                    
+
             }
         }
 
@@ -124,7 +120,7 @@ namespace BrowserProducts
         //set from radiobutton the choosen language for queries
         public void SetLanguage()
         {
-           language = engRadioButton.Checked != true ? "fr" : "en";
+            language = engRadioButton.Checked != true ? "fr" : "en";
         }
 
         private void ResetPaging()
@@ -134,22 +130,9 @@ namespace BrowserProducts
             currentPageTotalPagesLabel.Text = "";
         }
 
-        public void UpdateListView(int total)
-        {
-            int totalProducts = total;
-            numberOfPages = totalProducts / productsPerPage + 1;
-            totalProductsFoundLabel.Text = $"{totalProducts} products found";
-            currentPageTotalPagesLabel.Text = $"{currentPage + 1}  of {numberOfPages}";
-            if (numberOfPages > 0)
-            {
-                previousPageButton.Enabled = false;
-                nextPageButton.Enabled = true;
-            }
-        }
-
         private void fraRadioButton_CheckedChanged(object sender, EventArgs e)
         {
-            SetLanguage();            
+            SetLanguage();
         }
 
         private void engRadioButton_CheckedChanged(object sender, EventArgs e)
@@ -160,6 +143,7 @@ namespace BrowserProducts
         //When select a category product, load their subcategories con subCatComboBox
         private void catComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
+
             //If the SelectIndexChanged comes from reset or not,it will load or clear Combobox in ResetFilter method
             if (resetFilterButtonClicked == false)
             {
@@ -172,14 +156,14 @@ namespace BrowserProducts
                 }
             }
         }
-       
+
         private void productsForPageCombobox_SelectedIndexChanged(object sender, EventArgs e)
         {
             productsPerPage = int.Parse(productsForPageCombobox.Text);
             numberOfPages = totalProducts / productsPerPage + 1;
-            int lastSelectIndex = catComboBox.SelectedIndex;
-            catComboBox.SelectedIndex = -1;
-            catComboBox.SelectedIndex = lastSelectIndex;
+            //  int lastSelectIndex = catComboBox.SelectedIndex;
+            //  catComboBox.SelectedIndex = -1;
+            //  catComboBox.SelectedIndex = lastSelectIndex;
             currentPageTotalPagesLabel.Text = $"{currentPage + 1}  of {numberOfPages}";
         }
 
@@ -191,23 +175,7 @@ namespace BrowserProducts
                 previousPageButton.Enabled = false;
             }
             nextPageButton.Enabled = true;
-            productsListView.Items.Clear();
-            List<Product> products = new List<Product>();
-            if (avaliableCheckBox.Checked == true)
-            {
-                products = db.GetAvaliableProducts(language, productsPerPage, currentPage);
-                totalProducts = db.CountAvaliableProducts(language);
-            }
-            else
-            {
-                products = db.GetProductsWithSellerDates(language, productsPerPage, currentPage);
-                totalProducts = db.CountProductsWithSellerDates(language);
-            }
-            foreach (Product p in products)
-            {
-                productsListView.Items.Add(p.ToStringWithDate());
-            }
-            currentPageTotalPagesLabel.Text = $"{currentPage + 1}  of {numberOfPages}";
+            UpdateListView();
         }
 
         private void nextPageButton_Click(object sender, EventArgs e)
@@ -218,26 +186,11 @@ namespace BrowserProducts
                 nextPageButton.Enabled = false;
             }
             previousPageButton.Enabled = true;
-            productsListView.Items.Clear();
-            List<Product> products = new List<Product>();
-            if (avaliableCheckBox.Checked == true)
-            {
-                products = db.GetAvaliableProducts(language, productsPerPage, currentPage);
-                totalProducts = db.CountAvaliableProducts(language);
-            }
-            else
-            {
-                products = db.GetProductsWithSellerDates(language, productsPerPage, currentPage);
-                totalProducts = db.CountProductsWithSellerDates(language);
-            }
-            foreach (Product p in products)
-            {
-                productsListView.Items.Add(p.ToStringWithDate());
-            }
-            currentPageTotalPagesLabel.Text = $"{currentPage + 1}  of {numberOfPages}";
+            UpdateListView();
+
         }
 
-        
+
         private void searchProductButton_Click(object sender, EventArgs e)
         {
             if (searchProductTextBox.TextLength < 3)
@@ -277,97 +230,147 @@ namespace BrowserProducts
             }
         }
         //Simulates a Focus Event wrapping with categoriesGroupBox_Leave Event
-        private void categoriesGroupBox_Enter(object sender, EventArgs e)
-        {
-            searchGroupBox.Enabled = false;
-        }
-        //Simulates a Focus Event wrapping with categoriesGroupBox_Enter Event
-        private void categoriesGroupBox_Leave(object sender, EventArgs e)
-        {
-            searchGroupBox.Enabled = true;
-        }
+        //private void categoriesGroupBox_Enter(object sender, EventArgs e)
+        //{
+        //    searchGroupBox.Enabled = false;
+        //}
+        ////Simulates a Focus Event wrapping with categoriesGroupBox_Enter Event
+        //private void categoriesGroupBox_Leave(object sender, EventArgs e)
+        //{
+        //    searchGroupBox.Enabled = true;
+        //}
 
-        private void avaliableCheckBox_CheckedChanged_1(object sender, EventArgs e)
-        {
-            List<Product> products = new List<Product>();
-            productsListView.Items.Clear();
-            if (avaliableCheckBox.Checked == true)
-            {
-                products = db.GetAvaliableProducts(language, productsPerPage, currentPage);
-                totalProducts = db.CountAvaliableProducts(language);
-            }
-            else
-            {
-                products = db.GetProductsWithSellerDates(language, productsPerPage, currentPage);
-                totalProducts = db.CountProductsWithSellerDates(language);
-            }
-            UpdateListView(totalProducts);
-            foreach (Product p in products)
-            {
-                productsListView.Items.Add(p.ToStringWithDate());
-            }
-        }
+
         //apply the query with the values in categoryGroupBox and filterGroupBox; checking their values
         private void applyFilterButton_Click(object sender, EventArgs e)
         {
-            mainquery = $" select distinct production.ProductModel.Name as Name, " +
-                $"production.ProductDescription.Description as Description " +
-                $"from Production.Product inner join Production.ProductSubcategory on Product.ProductSubcategoryID = ProductSubcategory.ProductSubcategoryID " +
-                $"inner join Production.ProductCategory on ProductSubcategory.ProductCategoryID = ProductCategory.ProductCategoryID " +
-                $"inner join Production.ProductModel on Product.ProductModelID = ProductModel.ProductModelID " +   
-                $"inner join Production.ProductModelProductDescriptionCulture ON ProductModel.ProductModelID = ProductModelProductDescriptionCulture.ProductModelID " +
-                $"inner join production.ProductDescription on ProductModelProductDescriptionCulture.ProductDescriptionID = ProductDescription.ProductDescriptionID " +
-                $"where Production.ProductModelProductDescriptionCulture.CultureID = '{language}' ";
+            queryProductsWithSellDates = $"select distinct ProductModel.Name as Name, production.ProductDescription.Description as Description,Product.ListPrice, " +
+                 $"Product.SellStartDate AS 'SellStartDate', Product.SellEndDate AS 'SellEndDate' " +
+                       $"from Production.Product inner join Production.ProductSubcategory on Product.ProductSubcategoryID = ProductSubcategory.ProductSubcategoryID " +
+                       $"inner join Production.ProductCategory on ProductSubcategory.ProductCategoryID = ProductCategory.ProductCategoryID " +
+                       $"inner join Production.ProductModel on Product.ProductModelID = ProductModel.ProductModelID " +
+                       $"inner join Production.ProductModelProductDescriptionCulture ON ProductModel.ProductModelID = ProductModelProductDescriptionCulture.ProductModelID " +
+                       $"inner join production.ProductDescription on ProductModelProductDescriptionCulture.ProductDescriptionID = ProductDescription.ProductDescriptionID " +
+                       $"where ProductModelProductDescriptionCulture.CultureID = '{language}' AND Product.ProductModelID is not null ";
 
+            queryOnlyAvaliableProducts = $"select distinct ProductModel.Name as Name, production.ProductDescription.Description as Description,Product.ListPrice,Product.SellEndDate AS 'SellEndDate' " +
+                       $"from Production.Product inner join Production.ProductSubcategory on Product.ProductSubcategoryID = ProductSubcategory.ProductSubcategoryID " +
+                       $"inner join Production.ProductCategory on ProductSubcategory.ProductCategoryID = ProductCategory.ProductCategoryID " +
+                       $"inner join Production.ProductModel on Product.ProductModelID = ProductModel.ProductModelID " +
+                       $"inner join Production.ProductModelProductDescriptionCulture ON ProductModel.ProductModelID = ProductModelProductDescriptionCulture.ProductModelID " +
+                       $"inner join production.ProductDescription on ProductModelProductDescriptionCulture.ProductDescriptionID = ProductDescription.ProductDescriptionID " +
+                       $"where ProductModelProductDescriptionCulture.CultureID = '{language}' AND Product.ProductModelID is not null AND product.SellEndDate is null ";
+
+
+            if (avaliableCheckBox.Checked)
+                finalQuery = queryOnlyAvaliableProducts;
+            else
+                finalQuery = queryProductsWithSellDates;
+            MountingQuery();
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.CnnVal("AdventureWorks2016")))
+            {
+
+                string countquery = $"select count(*) from({finalQuery}) as counter";
+                totalProducts = connection.Query<int>(countquery).FirstOrDefault();
+            }
+
+
+            totalProductsFoundLabel.Text = $" {totalProducts} products found";
+
+            numberOfPages = totalProducts / int.Parse(productsForPageCombobox.Text) + 1;
+            currentPage = 0;
+            previousPageButton.Enabled = false;
+            if (numberOfPages > 1)
+                nextPageButton.Enabled = true;
+
+            UpdateListView();
+
+            //}
+
+
+            // ResetFilters();
+
+        }
+
+        private void MountingQuery()
+        {
             //If categoryComboBox has selected some category property
             if (catComboBox.SelectedIndex != -1)
             {
-                mainquery += $"AND Production.ProductCategory.Name = '{catComboBox.SelectedItem.ToString()}'"; string categoryClause = $"AND Production.ProductCategory.Name = '{catComboBox.SelectedItem.ToString()}' ";
+                finalQuery += $"AND Production.ProductCategory.Name = '{catComboBox.SelectedItem.ToString()}'";
             }
-
             //If subCategoryComboBox has selected some subcategory property
             if (subCatComboBox.SelectedIndex != -1)
             {
-                mainquery += $"AND ProductSubcategory.Name = '{subCatComboBox.SelectedItem.ToString()}' ";
+                finalQuery += $"AND ProductSubcategory.Name = '{subCatComboBox.SelectedItem.ToString()}' ";
             }
-
-
             //If colorComboBox has selected some Color property set a color SQL clause
             if (colorComboBox.SelectedIndex != -1)
             {
-                colorClause = $" AND Product.Color = '{colorComboBox.SelectedItem.ToString()}'";
+                finalQuery += $" AND Product.Color = '{colorComboBox.SelectedItem.ToString()}' ";
             }
             //If productLineComboBox has selected some style property set a style SQL clause
             if (styleComboBox.SelectedIndex != -1)
             {
-                styleClause = $" AND Product.Style = '{styleComboBox.SelectedItem.ToString()}'";
+                finalQuery += $" AND Product.Style = '{styleComboBox.SelectedItem.ToString()}' ";
             }
             //If productLineComboBox has selected some productLine property set a productLine SQL clause
             if (productLineComboBox.SelectedIndex != -1)
             {
-                productLineClause = $" AND Product.productLine = '{productLineComboBox.SelectedItem.ToString()}'";
+                finalQuery += $" AND Product.productLine = '{productLineComboBox.SelectedItem.ToString()}' ";
             }
+
+            finalQuery += priceClause;
+
+        }
+
+        public void UpdateListView()
+        {
+            if (orderByNameRadioButton.Checked)
+            {
+                orderBy = "NAME ASC";
+            }
+            else if (lowPriceRadioButton.Checked)
+            {
+                orderBy = "LISTPRICE ASC";
+            }
+            else if (sellEndDateRadioButton.Checked)
+            {
+                orderBy = "SellEndDate ASC ";
+            }
+
 
             using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.CnnVal("AdventureWorks2016")))
             {
+                currentPageTotalPagesLabel.Text = $"{currentPage + 1} of {numberOfPages} pages";
+
                 List<Product> products = new List<Product>();
-                products = connection.Query<Product>(mainquery).ToList();
+                string reF = finalQuery + $"order by {orderBy} " +
+                           $"Offset {productsPerPage * currentPage} rows " +
+                           $"fetch next {productsPerPage} rows only";
+                products = connection.Query<Product>(reF).ToList();
 
                 productsListView.Items.Clear();
                 foreach (Product p in products)
                 {
-                    productsListView.Items.Add(p.ToString());
+                    if (avaliableCheckBox.Checked)
+                        productsListView.Items.Add($"{p.Name.ToString()}   {p.Description.ToString()}");
+                    else
+                    {
+
+                        // Method Items.Add doesn´t get 4 arguments, so concat the dates
+                        string dates = $"  {p.SellStartDate.ToString()} --- {p.SellEndDate.ToString()}";
+                        productsListView.Items.Add(p.Name.ToString(), p.Description.ToString(), dates);
+                    }
                 }
             }
-            ResetFilters();
-
         }
 
         //Empty all select Index of the filter comboboxes and textbox prices
         private void ResetFilters()
         {
             catComboBox.SelectedIndex = -1;
-            subCatComboBox.SelectedIndex = -1;
+            //subCatComboBox.SelectedIndex = -1;
             subCatComboBox.Items.Clear();
             colorComboBox.SelectedIndex = -1;
             styleComboBox.SelectedIndex = -1;
@@ -380,8 +383,8 @@ namespace BrowserProducts
         {
             int temp;
             //if minPriceTextBox is a number
-            if (int.TryParse(minPriceTextBox.Text,out temp) )
-            {   
+            if (int.TryParse(minPriceTextBox.Text, out temp))
+            {
                 //If minPriceTextBox is lower than zero
                 if (temp < 0)
                 {
@@ -394,7 +397,7 @@ namespace BrowserProducts
                 {
                     minPrice = int.Parse(minPriceTextBox.Text);
                 }
-             }
+            }
             else //if minPriceTextBox is not a number
             {
                 MessageBox.Show("Please type a number");
@@ -420,7 +423,7 @@ namespace BrowserProducts
                 }
             }
             else  //if maxPriceTextBox is not a number
-            { 
+            {
                 MessageBox.Show("Please type a number");
                 maxPriceTextBox.Text = "";
             }
@@ -431,17 +434,27 @@ namespace BrowserProducts
             searchGroupBox.Enabled = false;
         }
         //Simulates a LeaveOnFocus Event 
-        private void filterGroupBox_Leave(object sender, EventArgs e)
-        {
-            searchGroupBox.Enabled = true;
-        }
+        //private void filterGroupBox_Leave(object sender, EventArgs e)
+        //{
+        //    searchGroupBox.Enabled = true;
+        //}
         // Throws the resetfilter method
         private void resetFilterButton_Click(object sender, EventArgs e)
         {
             resetFilterButtonClicked = true;
             ResetFilters();
         }
+
+        private void productsListView_DoubleClick(object sender, EventArgs e)
+        {
+
+            string selectedName = productsListView.SelectedItems[0].Name;
+            ProductDetails detailsForm = new ProductDetails(selectedName, language);
+            detailsForm.ShowDialog();
+        }
     }
 }
+
+
 
 

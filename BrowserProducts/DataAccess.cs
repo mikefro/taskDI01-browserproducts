@@ -15,6 +15,50 @@ namespace BrowserProducts
     public class DataAccess
     {
 
+        public List<Product> GetNameProductsByProductModelName(string productModelName, string language)
+        {
+            string query = $"select product.Name,production.ProductDescription.Description as Description from production.product " +
+                $"inner join Production.ProductSubcategory on Product.ProductSubcategoryID = ProductSubcategory.ProductSubcategoryID " +
+                $"inner join Production.ProductCategory on  ProductSubcategory.ProductCategoryID = ProductCategory.ProductCategoryID " +
+                $"inner join Production.ProductModel on Product.ProductModelID = ProductModel.ProductModelID " +
+                $"inner join Production.ProductModelProductDescriptionCulture ON ProductModel.ProductModelID = ProductModelProductDescriptionCulture.ProductModelID " +
+                $"inner join production.ProductDescription on ProductModelProductDescriptionCulture.ProductDescriptionID = ProductDescription.ProductDescriptionID " +
+                $"where ProductModelProductDescriptionCulture.CultureID = '{language}' and ProductModel.Name = '{productModelName}'";
+
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.CnnVal("AdventureWorks2016")))
+            {
+                
+                List<Product> productList = new List<Product>();
+
+                productList = connection.Query<Product>(query).ToList();
+                return productList;
+            }
+        }
+
+        public Product GetProduct(string productModelName, string language)
+        {
+            string queryDetailProduct = $"SELECT ProductID,production.ProductDescription.Description as Description,Product.Name as Name,ProductNumber" +
+                    $",MakeFlag,FinishedGoodsFlag,Color,SafetyStockLevel,ReorderPoint,StandardCost,ListPrice,Size,SizeUnitMeasureCode,WeightUnitMeasureCode" +
+                    $",Weight,DaysToManufacture,ProductLine,Class,Style,ProductSubcategory.Name,Product.ProductModelID,SellStartDate,SellEndDate,DiscontinuedDate,Product.ModifiedDate " +
+                    $"FROM AdventureWorks2016.Production.Product inner join Production.ProductModel on Product.ProductModelID = ProductModel.ProductModelID " +
+                    $"inner join Production.ProductSubcategory on Product.ProductSubcategoryID = ProductSubcategory.ProductSubcategoryID " +
+                    $"inner join Production.ProductModelProductDescriptionCulture ON ProductModel.ProductModelID = ProductModelProductDescriptionCulture.ProductModelID " +
+                    $"inner join production.ProductDescription on ProductModelProductDescriptionCulture.ProductDescriptionID = ProductDescription.ProductDescriptionID " +
+                    $"where ProductModelProductDescriptionCulture.CultureID = '{language}' and production.ProductModel.Name = '{productModelName}'";
+
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.CnnVal("AdventureWorks2016")))
+            {
+
+                Product detailedProduct = new Product();
+
+                detailedProduct =  (Product) connection.Query<Product>(queryDetailProduct);
+                return detailedProduct;
+            }
+        }
+    
+
+
+
         //return all the categories of the products
         public List<string> GetCategories()
         {
@@ -59,6 +103,7 @@ namespace BrowserProducts
                 return total;
             }
         }
+/*
         // returns only the avaliable products
         public List<Product> GetAvaliableProducts(string language, int productsPerPage, int currentPage)
         {
@@ -80,6 +125,7 @@ namespace BrowserProducts
                 return products;
             }
         }
+*/
         // get the total of products
         public int CountProductsWithSellerDates(string language)
         {
@@ -98,6 +144,7 @@ namespace BrowserProducts
                 return total;
             }
         }
+/*
         // returns All products with their sell dates
         public List<Product> GetProductsWithSellerDates(string language, int productsPerPage, int currentPage)
         {
@@ -120,6 +167,7 @@ namespace BrowserProducts
                 return products;
             }
         }
+*/
         //returns the list of colors of the products
         public List<string> GetColors()
         {
