@@ -8,19 +8,30 @@ namespace BrowserProducts
 {
     public class Product
     {
-        private int ProductID { set; get; }
+        private int productID;
+
+        public int GetProductID()
+        {
+            return productID;
+        }
+
+        private void SetProductID(int value)
+        {
+            productID = value;
+        }
+
         public string Name { get; set; }
         public string ProductNumber { get; set; }
         public byte MakeFlag { get; set; }
         public byte FinishedGoodsFlag { get; set; }
         public string Color { get; set; }
-        public int SafaetyStockLeve { get; set; }
+        public int SafetyStockLevel { get; set; }
         public int ReorderPoint{ get; set; }
         public float StandardCost { get; set; }
         public float ListPrice { get; set; }
         public string Size { get; set; }
-        private string SizeUnitMeasure { get; set; }
-        private string WeightUnitMeasure { get; set; }
+        public string SizeUnitMeasure { get; set; }
+        public string WeightUnitMeasure { get; set; }
         public float Weight { get; set; }
         public int DaysToManufacture { get; set;}
         public string ProductLine { get; set; }
@@ -39,19 +50,15 @@ namespace BrowserProducts
             return $"{Name} --- {Description}";
         }
 
-        public string ToStringWithDate()
-        {
-            return $"{Name} --- {Description} from {SellStartDate.ToString("dd/MM/yyyy")} ---- {VerifySellEndDate()}";
-        }
-
         //Formatting SellEndDate in Null Case or not
-        private string VerifySellEndDate()
+        public string VerifySellEndDate()
         {
-            if (SellEndDate.ToString() == "01/01/0001 00:00:00")
+            if (SellEndDate.ToShortDateString() == "01/01/0001")
             {
                 return ("Still Avaliable");
             }
-            return SellEndDate.ToString("dd/MM/yyyy");
+            return SellEndDate.ToShortDateString();
         }
+
     }
 }

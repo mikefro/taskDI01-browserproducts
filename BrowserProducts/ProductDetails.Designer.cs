@@ -28,10 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
+            this.nameLabel = new System.Windows.Forms.Label();
             this.nameComboBox = new System.Windows.Forms.ComboBox();
             this.productNumberLabel = new System.Windows.Forms.Label();
-            this.productNameTextBox = new System.Windows.Forms.TextBox();
+            this.productNumberTextBox = new System.Windows.Forms.TextBox();
             this.makeFlagLabel = new System.Windows.Forms.Label();
             this.finishedGoodsFlagLabel = new System.Windows.Forms.Label();
             this.makeFlagCheckBox = new System.Windows.Forms.CheckBox();
@@ -78,7 +78,7 @@
             this.sellStartDateTextBox = new System.Windows.Forms.TextBox();
             this.sellStartDateLabel = new System.Windows.Forms.Label();
             this.productGroupBox = new System.Windows.Forms.GroupBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.ambitGroupBox = new System.Windows.Forms.GroupBox();
             this.productPriceSizeGroupBox = new System.Windows.Forms.GroupBox();
             this.editOkButton = new System.Windows.Forms.Button();
             this.returnCancelButton = new System.Windows.Forms.Button();
@@ -87,18 +87,18 @@
             ((System.ComponentModel.ISupportInitialize)(this.daysToManufactureNumericUpDown)).BeginInit();
             this.productDatesGroupBox.SuspendLayout();
             this.productGroupBox.SuspendLayout();
-            this.groupBox1.SuspendLayout();
+            this.ambitGroupBox.SuspendLayout();
             this.productPriceSizeGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
-            // label1
+            // nameLabel
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(16, 25);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(35, 13);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "Name";
+            this.nameLabel.AutoSize = true;
+            this.nameLabel.Location = new System.Drawing.Point(16, 25);
+            this.nameLabel.Name = "nameLabel";
+            this.nameLabel.Size = new System.Drawing.Size(35, 13);
+            this.nameLabel.TabIndex = 2;
+            this.nameLabel.Text = "Name";
             // 
             // nameComboBox
             // 
@@ -106,7 +106,8 @@
             this.nameComboBox.Location = new System.Drawing.Point(77, 17);
             this.nameComboBox.Name = "nameComboBox";
             this.nameComboBox.Size = new System.Drawing.Size(168, 21);
-            this.nameComboBox.TabIndex = 3;
+            this.nameComboBox.TabIndex = 2;
+            this.nameComboBox.SelectedIndexChanged += new System.EventHandler(this.nameComboBox_SelectedIndexChanged);
             // 
             // productNumberLabel
             // 
@@ -117,17 +118,18 @@
             this.productNumberLabel.TabIndex = 4;
             this.productNumberLabel.Text = "Product Number";
             // 
-            // productNameTextBox
+            // productNumberTextBox
             // 
-            this.productNameTextBox.Location = new System.Drawing.Point(136, 56);
-            this.productNameTextBox.Name = "productNameTextBox";
-            this.productNameTextBox.Size = new System.Drawing.Size(109, 20);
-            this.productNameTextBox.TabIndex = 5;
+            this.productNumberTextBox.Location = new System.Drawing.Point(136, 56);
+            this.productNumberTextBox.Name = "productNumberTextBox";
+            this.productNumberTextBox.Size = new System.Drawing.Size(109, 20);
+            this.productNumberTextBox.TabIndex = 5;
+            this.productNumberTextBox.TabStop = false;
             // 
             // makeFlagLabel
             // 
             this.makeFlagLabel.AutoSize = true;
-            this.makeFlagLabel.Location = new System.Drawing.Point(420, 86);
+            this.makeFlagLabel.Location = new System.Drawing.Point(420, 98);
             this.makeFlagLabel.Name = "makeFlagLabel";
             this.makeFlagLabel.Size = new System.Drawing.Size(57, 13);
             this.makeFlagLabel.TabIndex = 6;
@@ -136,7 +138,7 @@
             // finishedGoodsFlagLabel
             // 
             this.finishedGoodsFlagLabel.AutoSize = true;
-            this.finishedGoodsFlagLabel.Location = new System.Drawing.Point(524, 85);
+            this.finishedGoodsFlagLabel.Location = new System.Drawing.Point(524, 97);
             this.finishedGoodsFlagLabel.Name = "finishedGoodsFlagLabel";
             this.finishedGoodsFlagLabel.Size = new System.Drawing.Size(103, 13);
             this.finishedGoodsFlagLabel.TabIndex = 7;
@@ -145,19 +147,19 @@
             // makeFlagCheckBox
             // 
             this.makeFlagCheckBox.AutoSize = true;
-            this.makeFlagCheckBox.Location = new System.Drawing.Point(483, 85);
+            this.makeFlagCheckBox.Location = new System.Drawing.Point(483, 97);
             this.makeFlagCheckBox.Name = "makeFlagCheckBox";
             this.makeFlagCheckBox.Size = new System.Drawing.Size(15, 14);
-            this.makeFlagCheckBox.TabIndex = 8;
+            this.makeFlagCheckBox.TabIndex = 4;
             this.makeFlagCheckBox.UseVisualStyleBackColor = true;
             // 
             // finishedGoodsFlagCheckBox
             // 
             this.finishedGoodsFlagCheckBox.AutoSize = true;
-            this.finishedGoodsFlagCheckBox.Location = new System.Drawing.Point(633, 84);
+            this.finishedGoodsFlagCheckBox.Location = new System.Drawing.Point(633, 96);
             this.finishedGoodsFlagCheckBox.Name = "finishedGoodsFlagCheckBox";
             this.finishedGoodsFlagCheckBox.Size = new System.Drawing.Size(15, 14);
-            this.finishedGoodsFlagCheckBox.TabIndex = 9;
+            this.finishedGoodsFlagCheckBox.TabIndex = 5;
             this.finishedGoodsFlagCheckBox.UseVisualStyleBackColor = true;
             // 
             // colorLabel
@@ -175,7 +177,7 @@
             this.colorComboBox.Location = new System.Drawing.Point(138, 80);
             this.colorComboBox.Name = "colorComboBox";
             this.colorComboBox.Size = new System.Drawing.Size(100, 21);
-            this.colorComboBox.TabIndex = 11;
+            this.colorComboBox.TabIndex = 9;
             // 
             // safetyStockLevelLabel
             // 
@@ -189,9 +191,14 @@
             // safetyStockLevelNumericUpDown
             // 
             this.safetyStockLevelNumericUpDown.Location = new System.Drawing.Point(127, 64);
+            this.safetyStockLevelNumericUpDown.Maximum = new decimal(new int[] {
+            500,
+            0,
+            0,
+            0});
             this.safetyStockLevelNumericUpDown.Name = "safetyStockLevelNumericUpDown";
             this.safetyStockLevelNumericUpDown.Size = new System.Drawing.Size(71, 20);
-            this.safetyStockLevelNumericUpDown.TabIndex = 13;
+            this.safetyStockLevelNumericUpDown.TabIndex = 17;
             // 
             // reorderPointLabel
             // 
@@ -205,9 +212,14 @@
             // reorderPointNumericUpDown
             // 
             this.reorderPointNumericUpDown.Location = new System.Drawing.Point(351, 58);
+            this.reorderPointNumericUpDown.Maximum = new decimal(new int[] {
+            500,
+            0,
+            0,
+            0});
             this.reorderPointNumericUpDown.Name = "reorderPointNumericUpDown";
             this.reorderPointNumericUpDown.Size = new System.Drawing.Size(71, 20);
-            this.reorderPointNumericUpDown.TabIndex = 15;
+            this.reorderPointNumericUpDown.TabIndex = 18;
             // 
             // standardCostLabel
             // 
@@ -223,14 +235,15 @@
             this.standarCostTextBox.Location = new System.Drawing.Point(127, 32);
             this.standarCostTextBox.Name = "standarCostTextBox";
             this.standarCostTextBox.Size = new System.Drawing.Size(71, 20);
-            this.standarCostTextBox.TabIndex = 17;
+            this.standarCostTextBox.TabIndex = 15;
+            this.standarCostTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.standarCostTextBox_Validating);
             // 
             // listPriceTextBox
             // 
             this.listPriceTextBox.Location = new System.Drawing.Point(351, 28);
             this.listPriceTextBox.Name = "listPriceTextBox";
             this.listPriceTextBox.Size = new System.Drawing.Size(69, 20);
-            this.listPriceTextBox.TabIndex = 19;
+            this.listPriceTextBox.TabIndex = 16;
             // 
             // listPriceLabel
             // 
@@ -253,10 +266,11 @@
             // sizeComboBox
             // 
             this.sizeComboBox.FormattingEnabled = true;
+            this.sizeComboBox.ItemHeight = 13;
             this.sizeComboBox.Location = new System.Drawing.Point(127, 102);
             this.sizeComboBox.Name = "sizeComboBox";
             this.sizeComboBox.Size = new System.Drawing.Size(72, 21);
-            this.sizeComboBox.TabIndex = 21;
+            this.sizeComboBox.TabIndex = 19;
             // 
             // sizeUnitMeasureLabel
             // 
@@ -273,7 +287,7 @@
             this.sizeUnitMeasureComboBox.Location = new System.Drawing.Point(351, 98);
             this.sizeUnitMeasureComboBox.Name = "sizeUnitMeasureComboBox";
             this.sizeUnitMeasureComboBox.Size = new System.Drawing.Size(73, 21);
-            this.sizeUnitMeasureComboBox.TabIndex = 23;
+            this.sizeUnitMeasureComboBox.TabIndex = 20;
             // 
             // label2
             // 
@@ -289,7 +303,7 @@
             this.weightTextBox.Location = new System.Drawing.Point(127, 141);
             this.weightTextBox.Name = "weightTextBox";
             this.weightTextBox.Size = new System.Drawing.Size(74, 20);
-            this.weightTextBox.TabIndex = 25;
+            this.weightTextBox.TabIndex = 21;
             // 
             // weightUnitMeasureLabel
             // 
@@ -306,7 +320,8 @@
             this.weightUnitMeasureComboBox.Location = new System.Drawing.Point(353, 136);
             this.weightUnitMeasureComboBox.Name = "weightUnitMeasureComboBox";
             this.weightUnitMeasureComboBox.Size = new System.Drawing.Size(71, 21);
-            this.weightUnitMeasureComboBox.TabIndex = 27;
+            this.weightUnitMeasureComboBox.TabIndex = 22;
+            this.weightUnitMeasureComboBox.TabStop = false;
             // 
             // descriptionLabel
             // 
@@ -322,8 +337,8 @@
             this.descriptionTextBox.Location = new System.Drawing.Point(423, 17);
             this.descriptionTextBox.Multiline = true;
             this.descriptionTextBox.Name = "descriptionTextBox";
-            this.descriptionTextBox.Size = new System.Drawing.Size(324, 41);
-            this.descriptionTextBox.TabIndex = 29;
+            this.descriptionTextBox.Size = new System.Drawing.Size(324, 59);
+            this.descriptionTextBox.TabIndex = 3;
             // 
             // label3
             // 
@@ -337,9 +352,14 @@
             // daysToManufactureNumericUpDown
             // 
             this.daysToManufactureNumericUpDown.Location = new System.Drawing.Point(169, 128);
+            this.daysToManufactureNumericUpDown.Maximum = new decimal(new int[] {
+            180,
+            0,
+            0,
+            0});
             this.daysToManufactureNumericUpDown.Name = "daysToManufactureNumericUpDown";
             this.daysToManufactureNumericUpDown.Size = new System.Drawing.Size(71, 20);
-            this.daysToManufactureNumericUpDown.TabIndex = 31;
+            this.daysToManufactureNumericUpDown.TabIndex = 10;
             // 
             // productLineLabel
             // 
@@ -356,7 +376,7 @@
             this.productLineComboBox.Location = new System.Drawing.Point(142, 178);
             this.productLineComboBox.Name = "productLineComboBox";
             this.productLineComboBox.Size = new System.Drawing.Size(99, 21);
-            this.productLineComboBox.TabIndex = 33;
+            this.productLineComboBox.TabIndex = 11;
             // 
             // classLabel
             // 
@@ -373,7 +393,7 @@
             this.classComboBox.Location = new System.Drawing.Point(143, 224);
             this.classComboBox.Name = "classComboBox";
             this.classComboBox.Size = new System.Drawing.Size(100, 21);
-            this.classComboBox.TabIndex = 35;
+            this.classComboBox.TabIndex = 12;
             // 
             // styleLabel
             // 
@@ -390,7 +410,7 @@
             this.styleComboBox.Location = new System.Drawing.Point(142, 277);
             this.styleComboBox.Name = "styleComboBox";
             this.styleComboBox.Size = new System.Drawing.Size(100, 21);
-            this.styleComboBox.TabIndex = 37;
+            this.styleComboBox.TabIndex = 13;
             // 
             // label4
             // 
@@ -407,7 +427,7 @@
             this.subCategoryComboBox.Location = new System.Drawing.Point(138, 39);
             this.subCategoryComboBox.Name = "subCategoryComboBox";
             this.subCategoryComboBox.Size = new System.Drawing.Size(100, 21);
-            this.subCategoryComboBox.TabIndex = 39;
+            this.subCategoryComboBox.TabIndex = 8;
             // 
             // productModelIdLabel
             // 
@@ -424,6 +444,7 @@
             this.productModelIdTextBox.Name = "productModelIdTextBox";
             this.productModelIdTextBox.Size = new System.Drawing.Size(128, 20);
             this.productModelIdTextBox.TabIndex = 41;
+            this.productModelIdTextBox.TabStop = false;
             // 
             // productDatesGroupBox
             // 
@@ -438,7 +459,7 @@
             this.productDatesGroupBox.Location = new System.Drawing.Point(335, 343);
             this.productDatesGroupBox.Name = "productDatesGroupBox";
             this.productDatesGroupBox.Size = new System.Drawing.Size(444, 83);
-            this.productDatesGroupBox.TabIndex = 42;
+            this.productDatesGroupBox.TabIndex = 21;
             this.productDatesGroupBox.TabStop = false;
             this.productDatesGroupBox.Text = "Product dates";
             // 
@@ -447,7 +468,8 @@
             this.modifiedDateTextBox.Location = new System.Drawing.Point(333, 51);
             this.modifiedDateTextBox.Name = "modifiedDateTextBox";
             this.modifiedDateTextBox.Size = new System.Drawing.Size(87, 20);
-            this.modifiedDateTextBox.TabIndex = 13;
+            this.modifiedDateTextBox.TabIndex = 25;
+            this.modifiedDateTextBox.TabStop = false;
             // 
             // modifiedDateLabel
             // 
@@ -463,7 +485,7 @@
             this.discontinuedDateTextBox.Location = new System.Drawing.Point(333, 19);
             this.discontinuedDateTextBox.Name = "discontinuedDateTextBox";
             this.discontinuedDateTextBox.Size = new System.Drawing.Size(87, 20);
-            this.discontinuedDateTextBox.TabIndex = 11;
+            this.discontinuedDateTextBox.TabIndex = 25;
             // 
             // discontinuedDateLabel
             // 
@@ -479,7 +501,7 @@
             this.sellEndDateTextBox.Location = new System.Drawing.Point(120, 51);
             this.sellEndDateTextBox.Name = "sellEndDateTextBox";
             this.sellEndDateTextBox.Size = new System.Drawing.Size(87, 20);
-            this.sellEndDateTextBox.TabIndex = 9;
+            this.sellEndDateTextBox.TabIndex = 24;
             // 
             // sellEndDateLabel
             // 
@@ -495,7 +517,7 @@
             this.sellStartDateTextBox.Location = new System.Drawing.Point(120, 19);
             this.sellStartDateTextBox.Name = "sellStartDateTextBox";
             this.sellStartDateTextBox.Size = new System.Drawing.Size(87, 20);
-            this.sellStartDateTextBox.TabIndex = 7;
+            this.sellStartDateTextBox.TabIndex = 23;
             // 
             // sellStartDateLabel
             // 
@@ -508,12 +530,12 @@
             // 
             // productGroupBox
             // 
-            this.productGroupBox.Controls.Add(this.label1);
+            this.productGroupBox.Controls.Add(this.nameLabel);
             this.productGroupBox.Controls.Add(this.nameComboBox);
             this.productGroupBox.Controls.Add(this.productModelIdTextBox);
             this.productGroupBox.Controls.Add(this.productNumberLabel);
             this.productGroupBox.Controls.Add(this.productModelIdLabel);
-            this.productGroupBox.Controls.Add(this.productNameTextBox);
+            this.productGroupBox.Controls.Add(this.productNumberTextBox);
             this.productGroupBox.Controls.Add(this.descriptionLabel);
             this.productGroupBox.Controls.Add(this.makeFlagLabel);
             this.productGroupBox.Controls.Add(this.finishedGoodsFlagLabel);
@@ -523,30 +545,30 @@
             this.productGroupBox.Location = new System.Drawing.Point(12, 12);
             this.productGroupBox.Name = "productGroupBox";
             this.productGroupBox.Size = new System.Drawing.Size(767, 135);
-            this.productGroupBox.TabIndex = 43;
+            this.productGroupBox.TabIndex = 1;
             this.productGroupBox.TabStop = false;
             this.productGroupBox.Text = "Product";
             // 
-            // groupBox1
+            // ambitGroupBox
             // 
-            this.groupBox1.Controls.Add(this.colorLabel);
-            this.groupBox1.Controls.Add(this.colorComboBox);
-            this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Controls.Add(this.subCategoryComboBox);
-            this.groupBox1.Controls.Add(this.daysToManufactureNumericUpDown);
-            this.groupBox1.Controls.Add(this.label4);
-            this.groupBox1.Controls.Add(this.productLineLabel);
-            this.groupBox1.Controls.Add(this.styleComboBox);
-            this.groupBox1.Controls.Add(this.productLineComboBox);
-            this.groupBox1.Controls.Add(this.styleLabel);
-            this.groupBox1.Controls.Add(this.classLabel);
-            this.groupBox1.Controls.Add(this.classComboBox);
-            this.groupBox1.Location = new System.Drawing.Point(12, 156);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(256, 340);
-            this.groupBox1.TabIndex = 44;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Product Ambits";
+            this.ambitGroupBox.Controls.Add(this.colorLabel);
+            this.ambitGroupBox.Controls.Add(this.colorComboBox);
+            this.ambitGroupBox.Controls.Add(this.label3);
+            this.ambitGroupBox.Controls.Add(this.subCategoryComboBox);
+            this.ambitGroupBox.Controls.Add(this.daysToManufactureNumericUpDown);
+            this.ambitGroupBox.Controls.Add(this.label4);
+            this.ambitGroupBox.Controls.Add(this.productLineLabel);
+            this.ambitGroupBox.Controls.Add(this.styleComboBox);
+            this.ambitGroupBox.Controls.Add(this.productLineComboBox);
+            this.ambitGroupBox.Controls.Add(this.styleLabel);
+            this.ambitGroupBox.Controls.Add(this.classLabel);
+            this.ambitGroupBox.Controls.Add(this.classComboBox);
+            this.ambitGroupBox.Location = new System.Drawing.Point(12, 156);
+            this.ambitGroupBox.Name = "ambitGroupBox";
+            this.ambitGroupBox.Size = new System.Drawing.Size(256, 340);
+            this.ambitGroupBox.TabIndex = 7;
+            this.ambitGroupBox.TabStop = false;
+            this.ambitGroupBox.Text = "Product Ambits";
             // 
             // productPriceSizeGroupBox
             // 
@@ -569,7 +591,7 @@
             this.productPriceSizeGroupBox.Location = new System.Drawing.Point(335, 153);
             this.productPriceSizeGroupBox.Name = "productPriceSizeGroupBox";
             this.productPriceSizeGroupBox.Size = new System.Drawing.Size(444, 184);
-            this.productPriceSizeGroupBox.TabIndex = 45;
+            this.productPriceSizeGroupBox.TabIndex = 14;
             this.productPriceSizeGroupBox.TabStop = false;
             this.productPriceSizeGroupBox.Text = "Product Prices and Sizes";
             // 
@@ -578,18 +600,20 @@
             this.editOkButton.Location = new System.Drawing.Point(355, 451);
             this.editOkButton.Name = "editOkButton";
             this.editOkButton.Size = new System.Drawing.Size(170, 31);
-            this.editOkButton.TabIndex = 46;
+            this.editOkButton.TabIndex = 26;
             this.editOkButton.Text = "Edit";
             this.editOkButton.UseVisualStyleBackColor = true;
+            this.editOkButton.Click += new System.EventHandler(this.editOkButton_Click);
             // 
             // returnCancelButton
             // 
             this.returnCancelButton.Location = new System.Drawing.Point(574, 451);
             this.returnCancelButton.Name = "returnCancelButton";
             this.returnCancelButton.Size = new System.Drawing.Size(170, 31);
-            this.returnCancelButton.TabIndex = 47;
+            this.returnCancelButton.TabIndex = 27;
             this.returnCancelButton.Text = "Return";
             this.returnCancelButton.UseVisualStyleBackColor = true;
+            this.returnCancelButton.Click += new System.EventHandler(this.returnCancelButton_Click);
             // 
             // ProductDetails
             // 
@@ -599,7 +623,7 @@
             this.Controls.Add(this.returnCancelButton);
             this.Controls.Add(this.editOkButton);
             this.Controls.Add(this.productPriceSizeGroupBox);
-            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.ambitGroupBox);
             this.Controls.Add(this.productGroupBox);
             this.Controls.Add(this.productDatesGroupBox);
             this.Name = "ProductDetails";
@@ -612,8 +636,8 @@
             this.productDatesGroupBox.PerformLayout();
             this.productGroupBox.ResumeLayout(false);
             this.productGroupBox.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.ambitGroupBox.ResumeLayout(false);
+            this.ambitGroupBox.PerformLayout();
             this.productPriceSizeGroupBox.ResumeLayout(false);
             this.productPriceSizeGroupBox.PerformLayout();
             this.ResumeLayout(false);
@@ -621,10 +645,10 @@
         }
 
         #endregion
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label nameLabel;
         private System.Windows.Forms.ComboBox nameComboBox;
         private System.Windows.Forms.Label productNumberLabel;
-        private System.Windows.Forms.TextBox productNameTextBox;
+        private System.Windows.Forms.TextBox productNumberTextBox;
         private System.Windows.Forms.Label makeFlagLabel;
         private System.Windows.Forms.Label finishedGoodsFlagLabel;
         private System.Windows.Forms.CheckBox makeFlagCheckBox;
@@ -671,7 +695,7 @@
         private System.Windows.Forms.TextBox discontinuedDateTextBox;
         private System.Windows.Forms.Label discontinuedDateLabel;
         private System.Windows.Forms.GroupBox productGroupBox;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox ambitGroupBox;
         private System.Windows.Forms.GroupBox productPriceSizeGroupBox;
         private System.Windows.Forms.Button editOkButton;
         private System.Windows.Forms.Button returnCancelButton;

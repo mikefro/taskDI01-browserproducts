@@ -27,7 +27,7 @@ namespace BrowserProducts
 
             using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.CnnVal("AdventureWorks2016")))
             {
-                
+
                 List<Product> productList = new List<Product>();
 
                 productList = connection.Query<Product>(query).ToList();
@@ -35,29 +35,34 @@ namespace BrowserProducts
             }
         }
 
-        public Product GetProduct(string productModelName, string language)
+        public List<Product> GetProduct(string productModelName, string language)
         {
             string queryDetailProduct = $"SELECT ProductID,production.ProductDescription.Description as Description,Product.Name as Name,ProductNumber" +
-                    $",MakeFlag,FinishedGoodsFlag,Color,SafetyStockLevel,ReorderPoint,StandardCost,ListPrice,Size,SizeUnitMeasureCode,WeightUnitMeasureCode" +
-                    $",Weight,DaysToManufacture,ProductLine,Class,Style,ProductSubcategory.Name,Product.ProductModelID,SellStartDate,SellEndDate,DiscontinuedDate,Product.ModifiedDate " +
+                    $",MakeFlag,FinishedGoodsFlag,Color,SafetyStockLevel,ReorderPoint,StandardCost,ListPrice,Size,SizeUnitMeasureCode as SizeUnitMeasure,WeightUnitMeasureCode as WeightUnitMeasure" +
+                    $",Weight,DaysToManufacture,ProductLine,Class,Style,product.ProductSubcategoryID as ProductSubcategory,Product.ProductModelID,SellStartDate,SellEndDate,DiscontinuedDate,Product.ModifiedDate " +
                     $"FROM AdventureWorks2016.Production.Product inner join Production.ProductModel on Product.ProductModelID = ProductModel.ProductModelID " +
                     $"inner join Production.ProductSubcategory on Product.ProductSubcategoryID = ProductSubcategory.ProductSubcategoryID " +
                     $"inner join Production.ProductModelProductDescriptionCulture ON ProductModel.ProductModelID = ProductModelProductDescriptionCulture.ProductModelID " +
                     $"inner join production.ProductDescription on ProductModelProductDescriptionCulture.ProductDescriptionID = ProductDescription.ProductDescriptionID " +
-                    $"where ProductModelProductDescriptionCulture.CultureID = '{language}' and production.ProductModel.Name = '{productModelName}'";
+                    $"where ProductModelProductDescriptionCulture.CultureID = '{language}' and production.Product.Name = '{productModelName}'";
 
             using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.CnnVal("AdventureWorks2016")))
             {
-
-                Product detailedProduct = new Product();
-
-                detailedProduct =  (Product) connection.Query<Product>(queryDetailProduct);
+                List<Product> detailedProduct = connection.Query<Product>(queryDetailProduct).ToList();
                 return detailedProduct;
             }
         }
-    
 
+        public List<string> GetAllSubCategories()
+        {
+            string sql = "select production.ProductSubcategory.Name from production.ProductSubcategory";
 
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.CnnVal("AdventureWorks2016")))
+            {
+                List<string> subCategoryList = connection.Query<string>(sql).ToList();
+                return subCategoryList;
+            }
+        }
 
         //return all the categories of the products
         public List<string> GetCategories()
@@ -86,6 +91,7 @@ namespace BrowserProducts
                 return subCategories;
             }
         }
+
         //Get the total of avaliables products
         public int CountAvaliableProducts(string language)
         {
@@ -99,33 +105,11 @@ namespace BrowserProducts
                                    $"inner join production.ProductDescription on ProductModelProductDescriptionCulture.ProductDescriptionID = ProductDescription.ProductDescriptionID " +
                                    $"where ProductModelProductDescriptionCulture.CultureID = '{language}' AND Product.ProductModelID is not null AND product.SellEndDate is null) as counter;";
 
-               int total = connection.Query<int>(sql).FirstOrDefault();
+                int total = connection.Query<int>(sql).FirstOrDefault();
                 return total;
             }
         }
-/*
-        // returns only the avaliable products
-        public List<Product> GetAvaliableProducts(string language, int productsPerPage, int currentPage)
-        {
-            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.CnnVal("AdventureWorks2016")))
-            {
-                string sql = $"select distinct ProductModel.Name as Name, production.ProductDescription.Description as Description " +
-                                   $"from Production.Product inner join Production.ProductSubcategory on Product.ProductSubcategoryID = ProductSubcategory.ProductSubcategoryID " +
-                                   $"inner join Production.ProductCategory on ProductSubcategory.ProductCategoryID = ProductCategory.ProductCategoryID " +
-                                   $"inner join Production.ProductModel on Product.ProductModelID = ProductModel.ProductModelID " +
-                                   $"inner join Production.ProductModelProductDescriptionCulture ON ProductModel.ProductModelID = ProductModelProductDescriptionCulture.ProductModelID " +
-                                   $"inner join production.ProductDescription on ProductModelProductDescriptionCulture.ProductDescriptionID = ProductDescription.ProductDescriptionID " +
-                                   $"where ProductModelProductDescriptionCulture.CultureID = '{language}' AND Product.ProductModelID is not null AND product.SellEndDate is null " +
-                                   $"order by ProductModel.Name " +
-                                   $"Offset {productsPerPage * currentPage} rows " +
-                                   $"fetch next {productsPerPage} rows only";
 
-                List<Product> products = new List<Product>();
-                products = connection.Query<Product>(sql).ToList();
-                return products;
-            }
-        }
-*/
         // get the total of products
         public int CountProductsWithSellerDates(string language)
         {
@@ -138,36 +122,13 @@ namespace BrowserProducts
                                    $"inner join Production.ProductModel on Product.ProductModelID = ProductModel.ProductModelID " +
                                    $"inner join Production.ProductModelProductDescriptionCulture ON ProductModel.ProductModelID = ProductModelProductDescriptionCulture.ProductModelID " +
                                    $"inner join production.ProductDescription on ProductModelProductDescriptionCulture.ProductDescriptionID = ProductDescription.ProductDescriptionID " +
-                                   $"where ProductModelProductDescriptionCulture.CultureID = '{language}' AND Product.ProductModelID is not null) as counter "; 
+                                   $"where ProductModelProductDescriptionCulture.CultureID = '{language}' AND Product.ProductModelID is not null) as counter ";
 
                 int total = connection.Query<int>(sql).FirstOrDefault();
                 return total;
             }
         }
-/*
-        // returns All products with their sell dates
-        public List<Product> GetProductsWithSellerDates(string language, int productsPerPage, int currentPage)
-        {
-            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.CnnVal("AdventureWorks2016")))
-            {
-                string sql = $"select distinct ProductModel.Name as Name, production.ProductDescription.Description as Description, " + 
-                             $"Product.SellStartDate AS 'SellStartDate', Product.SellEndDate AS 'SellEndDate' " +
-                                   $"from Production.Product inner join Production.ProductSubcategory on Product.ProductSubcategoryID = ProductSubcategory.ProductSubcategoryID " +
-                                   $"inner join Production.ProductCategory on ProductSubcategory.ProductCategoryID = ProductCategory.ProductCategoryID " +
-                                   $"inner join Production.ProductModel on Product.ProductModelID = ProductModel.ProductModelID " +
-                                   $"inner join Production.ProductModelProductDescriptionCulture ON ProductModel.ProductModelID = ProductModelProductDescriptionCulture.ProductModelID " +
-                                   $"inner join production.ProductDescription on ProductModelProductDescriptionCulture.ProductDescriptionID = ProductDescription.ProductDescriptionID " +
-                                   $"where ProductModelProductDescriptionCulture.CultureID = '{language}' AND Product.ProductModelID is not null " +
-                                   $"order by ProductModel.Name " +
-                                   $"Offset {productsPerPage * currentPage} rows " +
-                                   $"fetch next {productsPerPage} rows only";
 
-                List<Product> products = new List<Product>();
-                products = connection.Query<Product>(sql).ToList();
-                return products;
-            }
-        }
-*/
         //returns the list of colors of the products
         public List<string> GetColors()
         {
@@ -188,6 +149,7 @@ namespace BrowserProducts
                 return styles;
             }
         }
+
         //returns the list of lines of the products
         public List<string> GetProductLine()
         {
@@ -198,6 +160,59 @@ namespace BrowserProducts
                 return productLine;
             }
         }
+
+        //returns a List of all the kind of product classes
+        public List<string> GetAllClasses()
+        {
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.CnnVal("AdventureWorks2016")))
+            {
+                string sql = $"select distinct Product.Class from production.Product";
+                List<string> classes = connection.Query<string>(sql).ToList();
+                return classes;
+            }
+        }
+
+        //return a List of all the kind of product sizes
+        public List<string> GetAllSizes()
+        {
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.CnnVal("AdventureWorks2016")))
+            {
+                string sql = $"select distinct Product.Size from production.Product";
+                List<string> sizes = connection.Query<string>(sql).ToList();
+                return sizes;
+            }
+        }
+
+        //return a List of all the kind of unit sizes
+        public List<string> GetAllSizeUnits()
+        {
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.CnnVal("AdventureWorks2016")))
+            {
+                string sql = $"select UnitMeasure.Name from production.UnitMeasure";
+                List<string> unitSizes = connection.Query<string>(sql).ToList();
+                return unitSizes;
+            }
+        }
+
+        public string FromSubCatIdToSubCatName(int subCatId)
+        {
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.CnnVal("AdventureWorks2016")))
+            {
+                string sql = $"select productsubcategory.name from Production.ProductSubcategory where ProductSubcategoryID = {subCatId}";
+                string name = connection.Query<string>(sql).FirstOrDefault();
+                return name;
+            }
+        }
+        ////return a List of all the kind of unit weigth sizes
+        //public List<string> GetAllSizeUnits()
+        //{
+        //    using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.CnnVal("AdventureWorks2016")))
+        //    {
+        //        string sql = $"select UnitMeasure.Name from production.UnitMeasure";
+        //        List<string> unitSizes = connection.Query<string>(sql).ToList();
+        //        return unitSizes;
+        //    }
+        //}
         //returns a list of products that contains the string parameter in somewhere into the name
         public List<Product> GetProductsByProductName(string text)
         {
@@ -236,6 +251,54 @@ namespace BrowserProducts
             }
         }
 
+        public void UpdateProduct(Product p)
+        {
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.CnnVal("AdventureWorks2016")))
+            {
+                string sql = $"UPDATE Production.Products " +
+                             $"SET Name = @Name, ProductNumber = @ProductNumber, MakeFlag = @MakeFlag, " +
+                             $"FinishedGoodsFlag = @FinishedGoodsFlag, Color = @Color, SafetyStockLevel = @SafaetyStockLevel," +
+                             $"ReorderPoint = @ReorderPoint, StandardCost = @StandardCost, ListPrice = @ListPrice, Size = @Size," +
+                             $"SizeUnitMeasureCode = @SizeUnitMeasure, WeightUnitMeasureCode = @WeightUnitMeasure, Weight = @Weight," +
+                             $"DaysToManufacture = @DaysToManufacture, ProductLine = @ProductLine, Class = @Class, Style = @Style," +
+                             $"ProductSubcategoryID = @ProductSubcategory, ProductModelID = @ProductModelId, SellStartDate = @SellStartDate," +
+                             $"SellEndDate = @SellEndDate, DiscontinuedDate = @DiscontinuedDate, ModifiedDate = @ModifiedDate' " +
+                             $"WHERE ProductID = @ProductID";
+
+                int id = p.GetProductID();
+
+                //string sql = "UPDATE Categories SET Description = @Description WHERE CategoryID = @CategoryID;";
+
+
+                connection.Execute(sql, new { ProductID = id,
+                    Name = p.Name, 
+                    ProductNumber = p.ProductNumber,
+                    MakeFlag = p.MakeFlag,
+                    FinishedGoodsFlag = p.FinishedGoodsFlag,
+                    Color = p.Color,
+                    SafetyStockLevel = p.SafetyStockLevel,
+                    ReorderPoint = p.ReorderPoint,
+                    StandardCost = p.StandardCost,
+                    ListPrice = p.ListPrice,
+                    Size = p.Size,
+                    SizeUnitMeasure = p.SizeUnitMeasure,
+                    WeightUnitMeasure = p.WeightUnitMeasure,
+                    Weight = p.Weight,
+                    DaysToManufacture = p.DaysToManufacture,
+                    ProductLine = p.ProductLine,
+                    Class = p.Class,
+                    Style = p.Style,
+                    ProductSubcategory = p.ProductSubcategory,
+                    ProductModelId = p.ProductModelId,
+                    SellStartDate = p.SellStartDate,
+                    SellEndDate = p.SellEndDate,
+                    DiscontinuedDate = p.DiscontinuedDate,
+                    ModifiedDate = p.ModifiedDate
+                });
+            }
+        }
     }
+
 }
+
 
