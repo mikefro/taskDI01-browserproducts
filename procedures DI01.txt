@@ -1,0 +1,168 @@
+First of all, I will explain how to configure the App.config file 
+so that it connects to the DataBase locally or in the Azure Cloud.
+
+
+<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+	<connectionStrings>
+
+		<add name="AdventureWorks2016"
+			 connectionString="Server=(localdb)\MSSQLLocalDB; Database=AdventureWorks2016; Trusted_Connection=True;"
+			 providerName="System.Data.SqlClient" />
+
+	</connectionStrings>
+    <startup> 
+        <supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.7.2" />
+    </startup>
+</configuration>
+
+
+To connect to Azure Server it will use this connectionstring;
+
+
+<add name = ”AzureAdventureWorks2016” 
+connectionString = “Server=azuremikesqlserver.database.windows.net;
+		         Database=AdventureWorks2016;
+		         User Id=mikeazure; Password=*****;“ providerName="System.Data.SqlClient" />
+
+	In reference to the procedures hosted on the server I substituted them for direct queries,
+as I was unable to find the queries due to the large quantity of possible variables that could be added.
+I explain below some of the initial procedures I coded: 
+
+
+
+
+USE [AdventureWorks2016]
+GO 
+/****** Object:  StoredProcedure [Production].[spAllProducts]    Script Date: 20/11/2020 18:55:38 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+CREATE PROCEDURE [Production].[spAllProducts]
+@language nvarchar(6)
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+    -- Insert statements for procedure here
+select distinct
+ProductModel.Name as Name, production.ProductDescription.Description as Description
+from Production.Product
+inner join Production.ProductSubcategory on Product.ProductSubcategoryID = ProductSubcategory.ProductSubcategoryID
+inner join Production.ProductCategory on  ProductSubcategory.ProductCategoryID = ProductCategory.ProductCategoryID
+inner join Production.ProductModel on Product.ProductModelID = ProductModel.ProductModelID
+inner join Production.ProductModelProductDescriptionCulture ON ProductModel.ProductModelID = ProductModelProductDescriptionCulture.ProductModelID
+inner join production.ProductDescription on ProductModelProductDescriptionCulture.ProductDescriptionID = ProductDescription.ProductDescriptionID
+where ProductModelProductDescriptionCulture.CultureID = @language AND Product.ProductModelID is not null
+
+END
+
+
+USE [AdventureWorks2016]
+GO
+/****** Object:  StoredProcedure [Production].[spProductCategories]    Script Date: 20/11/2020 18:56:03 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+CREATE PROCEDURE [Production].[spProductCategories]
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+    -- Insert statements for procedure here
+Select ProductCategory.Name from AdventureWorks2016.Production.ProductCategory;
+END
+
+
+USE [AdventureWorks2016]
+GO
+/****** Object:  StoredProcedure [Production].[spProductSubCategories]    Script Date: 20/11/2020 18:56:31 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+CREATE PROCEDURE [Production].[spProductSubCategories]
+@categoryName nvarchar(20)
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+    -- Insert statements for procedure here
+Select ProductSubcategory.Name from AdventureWorks2016.Production.ProductSubcategory
+inner join Production.ProductCategory on ProductCategory.ProductCategoryID = ProductSubcategory.ProductCategoryID 
+where @categoryName = Productcategory.Name;
+END
+
+
+
+USE [AdventureWorks2016]
+GO
+****** Object:  StoredProcedure [Production].[spProductCategories]    */
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+ALTER PROCEDURE [Production].[spProductCategories]
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+    -- Insert statements for procedure here
+Select ProductCategory.Name from AdventureWorks2016.Production.ProductCategory;
+END
+
+USE [AdventureWorks2016]
+GO
+/****** Object:  StoredProcedure [Production].[spProductSubCategories]    ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+ALTER PROCEDURE [Production].[spProductSubCategories]
+@categoryName nvarchar(20)
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+    -- Insert statements for procedure here
+Select ProductSubcategory.Name from AdventureWorks2016.Production.ProductSubcategory
+inner join Production.ProductCategory on ProductCategory.ProductCategoryID = ProductSubcategory.ProductCategoryID 
+where @categoryName = Productcategory.Name;
+END
