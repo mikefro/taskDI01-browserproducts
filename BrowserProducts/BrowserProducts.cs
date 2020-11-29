@@ -277,7 +277,6 @@ namespace BrowserProducts
             MountingQuery();
             using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.CnnVal("AdventureWorks2016")))
             {
-
                 string countquery = $"select count(*) from({finalQuery}) as counter";
                 totalProducts = connection.Query<int>(countquery).FirstOrDefault();
             }
@@ -367,8 +366,6 @@ namespace BrowserProducts
                 }
             }
         }
-    
-
 
         //Empty all select Index of the filter comboboxes and textbox prices
         private void ResetFilters()
@@ -382,60 +379,6 @@ namespace BrowserProducts
             maxPriceTextBox.Text = "";
         }
 
-        private void minPriceTextBox_Leave(object sender, EventArgs e)
-        {
-
-        
-
-
-
-
-            ////if minPriceTextBox is a number
-            //if (int.TryParse(minPriceTextBox.Text, out temp))
-            //{
-            //    //If minPriceTextBox is lower than zero
-            //    if (temp < 0)
-            //    {
-            //        MessageBox.Show("Please, the minium price must be " +
-            //                         "equal to or greater than zero");
-            //        minPriceTextBox.Text = "";
-
-            //    }
-            //    else // It´s a number and it´s greater than zero
-            //    {
-            //        minPrice = int.Parse(minPriceTextBox.Text);
-            //    }
-            //}
-            //else //if minPriceTextBox is not a number
-            //{
-            //    MessageBox.Show("Please type a number");
-            //    minPriceTextBox.Text = "";
-            //}
-        }
-
-        private void MaxTextBox_Leave(object sender, EventArgs e)
-        {
-            int temp;
-            //if maxPriceTextBox is a number
-            if (int.TryParse(minPriceTextBox.Text, out temp))
-            {
-                // if minPrice is greater than maxPriceTextBox
-                if (temp < minPrice)
-                {
-                    MessageBox.Show("The maxium price must be greater than minium price");
-                }
-                else //It´s a number and it´s greater than minprice
-                {
-                    maxPrice = int.Parse(maxPriceTextBox.Text);
-                    priceClause = $"AND product.ListPrice BETWEEN {minPrice} AND {maxPrice} ";
-                }
-            }
-            else  //if maxPriceTextBox is not a number
-            {
-                MessageBox.Show("Please type a number");
-                maxPriceTextBox.Text = "";
-            }
-        }
         //Simulates a onFocus Event
         private void filterGroupBox_Enter(object sender, EventArgs e)
         {
@@ -446,6 +389,7 @@ namespace BrowserProducts
         //{
         //    searchGroupBox.Enabled = true;
         //}
+
         // Throws the resetfilter method
         private void resetFilterButton_Click(object sender, EventArgs e)
         {
@@ -475,31 +419,70 @@ namespace BrowserProducts
         }
 
         private void minPriceTextBox_Validating(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-
-        }
-
-        private void minPriceTextBox_Validated(object sender, EventArgs e)
-        {
+        {            
             try
             {
-                int temp = int.Parse(minPriceTextBox.Text);
+                minPrice = int.Parse(minPriceTextBox.Text);
 
-                if (temp < 0)
+                if (minPrice < 0)
                 {
-                    throw new ArgumentException("Only Positive Numbers!");
-                    minPriceTextBox.Text = "";
+                    throw new ArgumentException();          
                 }
             }
             catch (FormatException ex)
             {
-                MessageBox.Show("It must be a number");
+                MessageBox.Show("It must be a NUMBER");
                 minPriceTextBox.Text = "";
+                minPriceTextBox.Focus();
             }
-            catch (ArgumentException ae)
+            catch(ArgumentException)
             {
-
+                MessageBox.Show("Only Positive Numbers please");
+                minPriceTextBox.Text = "";
+                minPriceTextBox.Focus();
             }
+
+        }
+        //Validating maxPrice with the 3 possible scenarios
+        private void maxPriceTextBox_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+         
+            try
+            {
+                maxPrice = int.Parse(maxPriceTextBox.Text);
+
+                if (maxPrice < minPrice)
+                {
+                    throw new Exception();
+                }
+                if (maxPrice < 0) 
+                {
+                    throw new ArgumentException();
+                }
+            }
+            catch (FormatException)
+            {
+                MessageBox.Show("It must be a NUMBER");
+                maxPriceTextBox.Text = "";
+                maxPriceTextBox.Focus();
+            }
+            catch (ArgumentException)
+            {
+                MessageBox.Show("Only Positive Numbers please");
+                minPriceTextBox.Text = "";
+                minPriceTextBox.Focus();
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("The maxium price must be greater than minium price");
+                maxPriceTextBox.Text = "";
+                maxPriceTextBox.Focus();
+            }
+            finally
+            {
+                priceClause = $"AND product.ListPrice BETWEEN {minPrice} AND {maxPrice} ";
+            }
+
         }
     }
 }

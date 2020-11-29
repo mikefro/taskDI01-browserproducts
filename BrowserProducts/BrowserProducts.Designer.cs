@@ -245,7 +245,7 @@
             this.maxPriceTextBox.Name = "maxPriceTextBox";
             this.maxPriceTextBox.Size = new System.Drawing.Size(53, 20);
             this.maxPriceTextBox.TabIndex = 8;
-            this.maxPriceTextBox.Leave += new System.EventHandler(this.MaxTextBox_Leave);
+            this.maxPriceTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.maxPriceTextBox_Validating);
             // 
             // minPriceTextBox
             // 
@@ -253,9 +253,7 @@
             this.minPriceTextBox.Name = "minPriceTextBox";
             this.minPriceTextBox.Size = new System.Drawing.Size(53, 20);
             this.minPriceTextBox.TabIndex = 7;
-            this.minPriceTextBox.Leave += new System.EventHandler(this.minPriceTextBox_Leave);
             this.minPriceTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.minPriceTextBox_Validating);
-            this.minPriceTextBox.Validated += new System.EventHandler(this.minPriceTextBox_Validated);
             // 
             // priceLabel
             // 

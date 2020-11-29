@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -203,6 +204,16 @@ namespace BrowserProducts
                 return name;
             }
         }
+
+        public int FromSubCatNameToSubCatId(string subCatName)
+        {
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.CnnVal("AdventureWorks2016")))
+            {
+                string sql = $"select productsubcategory.ProductSubcategoryID from Production.ProductSubcategory where ProductSubcategory.Name = '{subCatName}'";
+                int id = connection.Query<int>(sql).FirstOrDefault();
+                return id;
+            }
+        }
         ////return a List of all the kind of unit weigth sizes
         //public List<string> GetAllSizeUnits()
         //{
@@ -253,52 +264,54 @@ namespace BrowserProducts
 
         public void UpdateProduct(Product p)
         {
-            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.CnnVal("AdventureWorks2016")))
-            {
-                string sql = $"UPDATE Production.Products " +
-                             $"SET Name = @Name, ProductNumber = @ProductNumber, MakeFlag = @MakeFlag, " +
-                             $"FinishedGoodsFlag = @FinishedGoodsFlag, Color = @Color, SafetyStockLevel = @SafaetyStockLevel," +
-                             $"ReorderPoint = @ReorderPoint, StandardCost = @StandardCost, ListPrice = @ListPrice, Size = @Size," +
-                             $"SizeUnitMeasureCode = @SizeUnitMeasure, WeightUnitMeasureCode = @WeightUnitMeasure, Weight = @Weight," +
-                             $"DaysToManufacture = @DaysToManufacture, ProductLine = @ProductLine, Class = @Class, Style = @Style," +
-                             $"ProductSubcategoryID = @ProductSubcategory, ProductModelID = @ProductModelId, SellStartDate = @SellStartDate," +
-                             $"SellEndDate = @SellEndDate, DiscontinuedDate = @DiscontinuedDate, ModifiedDate = @ModifiedDate' " +
-                             $"WHERE ProductID = @ProductID";
+                using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.CnnVal("AdventureWorks2016")))
+                {
+                    string sql = $"UPDATE Production.Product " +
+                                 $"SET Name = @Name, ProductNumber = @ProductNumber, MakeFlag = @MakeFlag, " +
+                                 $"FinishedGoodsFlag = @FinishedGoodsFlag, Color = @Color, SafetyStockLevel = @SafetyStockLevel," +
+                                 $"ReorderPoint = @ReorderPoint, StandardCost = @StandardCost, ListPrice = @ListPrice, Size = @Size," +
+                                 $"SizeUnitMeasureCode = @SizeUnitMeasure, WeightUnitMeasureCode = @WeightUnitMeasure, Weight = @Weight," +
+                                 $"DaysToManufacture = @DaysToManufacture, ProductLine = @ProductLine, Class = @Class, Style = @Style," +
+                                 $"ProductSubcategoryID = @ProductSubcategory, ProductModelID = @ProductModelId, SellStartDate = @SellStartDate," +
+                                 $"SellEndDate = @SellEndDate, DiscontinuedDate = @DiscontinuedDate, ModifiedDate = @ModifiedDate " +
+                                 $"WHERE ProductID = @ProductID;";
 
-                int id = p.GetProductID();
+                    int id = p.GetProductID();
 
-                //string sql = "UPDATE Categories SET Description = @Description WHERE CategoryID = @CategoryID;";
+                    //string sql = "UPDATE Categories SET Description = @Description WHERE CategoryID = @CategoryID;";
 
 
-                connection.Execute(sql, new { ProductID = id,
-                    Name = p.Name, 
-                    ProductNumber = p.ProductNumber,
-                    MakeFlag = p.MakeFlag,
-                    FinishedGoodsFlag = p.FinishedGoodsFlag,
-                    Color = p.Color,
-                    SafetyStockLevel = p.SafetyStockLevel,
-                    ReorderPoint = p.ReorderPoint,
-                    StandardCost = p.StandardCost,
-                    ListPrice = p.ListPrice,
-                    Size = p.Size,
-                    SizeUnitMeasure = p.SizeUnitMeasure,
-                    WeightUnitMeasure = p.WeightUnitMeasure,
-                    Weight = p.Weight,
-                    DaysToManufacture = p.DaysToManufacture,
-                    ProductLine = p.ProductLine,
-                    Class = p.Class,
-                    Style = p.Style,
-                    ProductSubcategory = p.ProductSubcategory,
-                    ProductModelId = p.ProductModelId,
-                    SellStartDate = p.SellStartDate,
-                    SellEndDate = p.SellEndDate,
-                    DiscontinuedDate = p.DiscontinuedDate,
-                    ModifiedDate = p.ModifiedDate
-                });
+                    connection.Execute(sql, new { ProductID = id,
+                        Name = p.Name,
+                        ProductNumber = p.ProductNumber,
+                        MakeFlag = p.MakeFlag,
+                        FinishedGoodsFlag = p.FinishedGoodsFlag,
+                        Color = p.Color,
+                        SafetyStockLevel = p.SafetyStockLevel,
+                        ReorderPoint = p.ReorderPoint,
+                        StandardCost = p.StandardCost,
+                        ListPrice = p.ListPrice,
+                        Size = p.Size,
+                        SizeUnitMeasure = p.SizeUnitMeasure,
+                        WeightUnitMeasure = p.WeightUnitMeasure,
+                        Weight = p.Weight,
+                        DaysToManufacture = p.DaysToManufacture,
+                        ProductLine = p.ProductLine,
+                        Class = p.Class,
+                        Style = p.Style,
+                        ProductSubcategory = p.ProductSubcategory,
+                        ProductModelId = p.ProductModelId,
+                        SellStartDate = p.SellStartDate,
+                        SellEndDate = p.SellEndDate,
+                        DiscontinuedDate = p.DiscontinuedDate,
+                        ModifiedDate = p.ModifiedDate
+                    });
+                }
+            }
             }
         }
-    }
+    
 
-}
+
 
 

@@ -120,6 +120,7 @@
             // 
             // productNumberTextBox
             // 
+            this.productNumberTextBox.Enabled = false;
             this.productNumberTextBox.Location = new System.Drawing.Point(136, 56);
             this.productNumberTextBox.Name = "productNumberTextBox";
             this.productNumberTextBox.Size = new System.Drawing.Size(109, 20);
@@ -178,6 +179,7 @@
             this.colorComboBox.Name = "colorComboBox";
             this.colorComboBox.Size = new System.Drawing.Size(100, 21);
             this.colorComboBox.TabIndex = 9;
+            this.colorComboBox.Validated += new System.EventHandler(this.colorComboBox_Validated);
             // 
             // safetyStockLevelLabel
             // 
@@ -244,6 +246,7 @@
             this.listPriceTextBox.Name = "listPriceTextBox";
             this.listPriceTextBox.Size = new System.Drawing.Size(69, 20);
             this.listPriceTextBox.TabIndex = 16;
+            this.listPriceTextBox.TextChanged += new System.EventHandler(this.listPriceTextBox_TextChanged);
             // 
             // listPriceLabel
             // 
@@ -271,6 +274,7 @@
             this.sizeComboBox.Name = "sizeComboBox";
             this.sizeComboBox.Size = new System.Drawing.Size(72, 21);
             this.sizeComboBox.TabIndex = 19;
+            this.sizeComboBox.Validated += new System.EventHandler(this.sizeComboBox_Validated);
             // 
             // sizeUnitMeasureLabel
             // 
@@ -288,6 +292,7 @@
             this.sizeUnitMeasureComboBox.Name = "sizeUnitMeasureComboBox";
             this.sizeUnitMeasureComboBox.Size = new System.Drawing.Size(73, 21);
             this.sizeUnitMeasureComboBox.TabIndex = 20;
+            this.sizeUnitMeasureComboBox.Validating += new System.ComponentModel.CancelEventHandler(this.sizeUnitMeasureComboBox_Validating);
             // 
             // label2
             // 
@@ -304,6 +309,7 @@
             this.weightTextBox.Name = "weightTextBox";
             this.weightTextBox.Size = new System.Drawing.Size(74, 20);
             this.weightTextBox.TabIndex = 21;
+            this.weightTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.weightTextBox_Validating);
             // 
             // weightUnitMeasureLabel
             // 
@@ -322,6 +328,7 @@
             this.weightUnitMeasureComboBox.Size = new System.Drawing.Size(71, 21);
             this.weightUnitMeasureComboBox.TabIndex = 22;
             this.weightUnitMeasureComboBox.TabStop = false;
+            this.weightUnitMeasureComboBox.Validated += new System.EventHandler(this.weightUnitMeasureComboBox_Validated);
             // 
             // descriptionLabel
             // 
@@ -377,6 +384,8 @@
             this.productLineComboBox.Name = "productLineComboBox";
             this.productLineComboBox.Size = new System.Drawing.Size(99, 21);
             this.productLineComboBox.TabIndex = 11;
+            this.productLineComboBox.SelectedIndexChanged += new System.EventHandler(this.productLineComboBox_SelectedIndexChanged);
+            this.productLineComboBox.Validated += new System.EventHandler(this.productLineComboBox_Validated);
             // 
             // classLabel
             // 
@@ -411,6 +420,7 @@
             this.styleComboBox.Name = "styleComboBox";
             this.styleComboBox.Size = new System.Drawing.Size(100, 21);
             this.styleComboBox.TabIndex = 13;
+            this.styleComboBox.Validated += new System.EventHandler(this.styleComboBox_Validated);
             // 
             // label4
             // 
@@ -428,6 +438,7 @@
             this.subCategoryComboBox.Name = "subCategoryComboBox";
             this.subCategoryComboBox.Size = new System.Drawing.Size(100, 21);
             this.subCategoryComboBox.TabIndex = 8;
+            this.subCategoryComboBox.Validating += new System.ComponentModel.CancelEventHandler(this.subCategoryComboBox_Validating);
             // 
             // productModelIdLabel
             // 
@@ -465,6 +476,7 @@
             // 
             // modifiedDateTextBox
             // 
+            this.modifiedDateTextBox.Enabled = false;
             this.modifiedDateTextBox.Location = new System.Drawing.Point(333, 51);
             this.modifiedDateTextBox.Name = "modifiedDateTextBox";
             this.modifiedDateTextBox.Size = new System.Drawing.Size(87, 20);
@@ -486,6 +498,7 @@
             this.discontinuedDateTextBox.Name = "discontinuedDateTextBox";
             this.discontinuedDateTextBox.Size = new System.Drawing.Size(87, 20);
             this.discontinuedDateTextBox.TabIndex = 25;
+            this.discontinuedDateTextBox.Validated += new System.EventHandler(this.discontinuedDateTextBox_Validated);
             // 
             // discontinuedDateLabel
             // 
@@ -502,6 +515,7 @@
             this.sellEndDateTextBox.Name = "sellEndDateTextBox";
             this.sellEndDateTextBox.Size = new System.Drawing.Size(87, 20);
             this.sellEndDateTextBox.TabIndex = 24;
+            this.sellEndDateTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.sellEndDateTextBox_Validating);
             // 
             // sellEndDateLabel
             // 
@@ -518,6 +532,8 @@
             this.sellStartDateTextBox.Name = "sellStartDateTextBox";
             this.sellStartDateTextBox.Size = new System.Drawing.Size(87, 20);
             this.sellStartDateTextBox.TabIndex = 23;
+            this.sellStartDateTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.sellStartDateTextBox_Validating);
+            this.sellStartDateTextBox.Validated += new System.EventHandler(this.sellStartDateTextBox_Validated);
             // 
             // sellStartDateLabel
             // 
