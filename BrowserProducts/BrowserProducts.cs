@@ -185,9 +185,6 @@ namespace BrowserProducts
         {
             productsPerPage = int.Parse(productsForPageCombobox.Text);
             numberOfPages = totalProducts / productsPerPage + 1;
-            //  int lastSelectIndex = catComboBox.SelectedIndex;
-            //  catComboBox.SelectedIndex = -1;
-            //  catComboBox.SelectedIndex = lastSelectIndex;
             currentPageTotalPagesLabel.Text = $"{currentPage + 1}  of {numberOfPages}";
  
         }
@@ -245,25 +242,16 @@ namespace BrowserProducts
             }
         }
 
-        private void searchProductTextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (searchProductTextBox.TextLength > 0)
-            {
-                categoriesGroupBox.Enabled = false;
-                filterGroupBox.Enabled = false;
-                orderByGroupBox.Enabled = false;
-            }
-        }
         //Simulates a Focus Event wrapping with categoriesGroupBox_Leave Event
-        //private void categoriesGroupBox_Enter(object sender, EventArgs e)
-        //{
-        //    searchGroupBox.Enabled = false;
-        //}
-        ////Simulates a Focus Event wrapping with categoriesGroupBox_Enter Event
-        //private void categoriesGroupBox_Leave(object sender, EventArgs e)
-        //{
-        //    searchGroupBox.Enabled = true;
-        //}
+        private void categoriesGroupBox_Enter(object sender, EventArgs e)
+        {
+            searchGroupBox.Enabled = false;
+        }
+        //Simulates a Focus Event wrapping with categoriesGroupBox_Enter Event
+        private void categoriesGroupBox_Leave(object sender, EventArgs e)
+        {
+            searchGroupBox.Enabled = true;
+        }
 
 
         //apply the query with the values in categoryGroupBox and filterGroupBox; checking their values
@@ -384,11 +372,12 @@ namespace BrowserProducts
         {
             searchGroupBox.Enabled = false;
         }
-        //Simulates a LeaveOnFocus Event 
-        //private void filterGroupBox_Leave(object sender, EventArgs e)
-        //{
-        //    searchGroupBox.Enabled = true;
-        //}
+
+        //Simulates a LeaveOnFocus Event
+        private void filterGroupBox_Leave(object sender, EventArgs e)
+        {
+            searchGroupBox.Enabled = true;
+        }
 
         // Throws the resetfilter method
         private void resetFilterButton_Click(object sender, EventArgs e)
@@ -403,18 +392,14 @@ namespace BrowserProducts
             ProductDetails detailsForm = new ProductDetails(selectedProduct, language);
             detailsForm.ShowDialog();
 
-            //if (detailsForm.ShowDialog() == DialogResult.OK)
-            //{
-            //    Console.WriteLine("Dialog returned with OK");
-            //}
-            //else if (detailsForm.ShowDialog() == DialogResult.Cancel)
-            //{
-            //    Console.WriteLine("Dialog returned with Cancel");
-            //}
-            //else
-            //{
-            //    Console.WriteLine("Dialog returned " + detailsForm.ShowDialog());
-            //}
+            if (detailsForm.DialogResult == DialogResult.OK)
+            {
+                MessageBox.Show("The product has been updated");
+            }
+            else if (detailsForm.DialogResult == DialogResult.Abort)
+            {
+                MessageBox.Show("The changes have  not been saved");
+            }
 
         }
 
@@ -483,6 +468,20 @@ namespace BrowserProducts
                 priceClause = $"AND product.ListPrice BETWEEN {minPrice} AND {maxPrice} ";
             }
 
+        }
+        //Simulates that user get the focus on searchGroupBox , NOT REALLY GOOD
+        private void searchGroupBox_Enter(object sender, EventArgs e)
+        {
+            categoriesGroupBox.Enabled = false;
+            filterGroupBox.Enabled = false;
+            orderByGroupBox.Enabled = false;
+        }
+        //Simulates that the user leaves the focus on searchGroupBox, NOT REALLY GOOD
+        private void searchGroupBox_Leave(object sender, EventArgs e)
+        {
+            categoriesGroupBox.Enabled = true;
+            filterGroupBox.Enabled = true;
+            orderByGroupBox.Enabled = true;
         }
     }
 }

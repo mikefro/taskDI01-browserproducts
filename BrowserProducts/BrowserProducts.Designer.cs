@@ -445,6 +445,8 @@
             this.searchGroupBox.TabIndex = 4;
             this.searchGroupBox.TabStop = false;
             this.searchGroupBox.Text = "Search";
+            this.searchGroupBox.Enter += new System.EventHandler(this.searchGroupBox_Enter);
+            this.searchGroupBox.Leave += new System.EventHandler(this.searchGroupBox_Leave);
             // 
             // modelNamelRadioButton
             // 
@@ -474,7 +476,6 @@
             this.searchProductTextBox.Name = "searchProductTextBox";
             this.searchProductTextBox.Size = new System.Drawing.Size(206, 20);
             this.searchProductTextBox.TabIndex = 3;
-            this.searchProductTextBox.TextChanged += new System.EventHandler(this.searchProductTextBox_TextChanged);
             // 
             // searchProductButton
             // 

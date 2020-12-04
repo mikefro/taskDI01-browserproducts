@@ -261,7 +261,7 @@ namespace BrowserProducts
                 return products;
             }
         }
-
+        //Update the product details from productDetails Form
         public void UpdateProduct(Product p)
         {
                 using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(Helper.CnnVal("AdventureWorks2016")))
@@ -270,16 +270,13 @@ namespace BrowserProducts
                                  $"SET Name = @Name, ProductNumber = @ProductNumber, MakeFlag = @MakeFlag, " +
                                  $"FinishedGoodsFlag = @FinishedGoodsFlag, Color = @Color, SafetyStockLevel = @SafetyStockLevel," +
                                  $"ReorderPoint = @ReorderPoint, StandardCost = @StandardCost, ListPrice = @ListPrice, Size = @Size," +
-                                 $"SizeUnitMeasureCode = @SizeUnitMeasure, WeightUnitMeasureCode = @WeightUnitMeasure, Weight = @Weight," +
+                                 $"SizeUnitMeasureCode = @SizeUnitMeasure, WeightUnitMeasureCode = @WeightUnitMeasure, Weight = NULLIF(@Weight, 0)," +
                                  $"DaysToManufacture = @DaysToManufacture, ProductLine = @ProductLine, Class = @Class, Style = @Style," +
                                  $"ProductSubcategoryID = @ProductSubcategory, ProductModelID = @ProductModelId, SellStartDate = @SellStartDate," +
                                  $"SellEndDate = @SellEndDate, DiscontinuedDate = @DiscontinuedDate, ModifiedDate = @ModifiedDate " +
                                  $"WHERE ProductID = @ProductID;";
 
                     int id = p.GetProductID();
-
-                    //string sql = "UPDATE Categories SET Description = @Description WHERE CategoryID = @CategoryID;";
-
 
                     connection.Execute(sql, new { ProductID = id,
                         Name = p.Name,

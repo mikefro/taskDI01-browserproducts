@@ -8,7 +8,7 @@ namespace BrowserProducts
 {
     public class Product
     {
-        private int productID;
+        public int productID;
 
         public int GetProductID()
         {

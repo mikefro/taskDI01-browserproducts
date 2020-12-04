@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using Dapper;
 using BrowserProducts;
 using System.Data.SqlTypes;
+using System.Globalization;
 
 namespace BrowserProducts
 {
@@ -106,6 +107,7 @@ namespace BrowserProducts
         //Fill all the form fields with the Data of the doubleclicked product in main form
         private void FillProductFields(Product product)
         {
+            
             productNumberTextBox.Text = product.ProductNumber;
             productModelIdTextBox.Text = product.ProductModelId.ToString();
             makeFlagCheckBox.Checked = product.MakeFlag != 0 ? true : false;
@@ -176,7 +178,9 @@ namespace BrowserProducts
             {
                 if (x is TextBox || x is CheckBox || x is ComboBox || x is NumericUpDown)
                 {
-                    if (x.Text != "modifiedDateTextBox")  // modifiedDateTextBox will be automatically modified if there is an update
+                    // modifiedDateTextBox will be automatically modified if there is an update
+                    // But doesn´t work the enabled property for the modifiedDateTextBox.
+                    if (x.Name != "modifiedDateTextBox")  
                           x.Enabled = condition;
                 }
             }
@@ -187,14 +191,15 @@ namespace BrowserProducts
             EnabledOrDisableEdition(false);
             LoadNameComboBoxAndDescription();
             LoadComboBoxes();
+
         }
 
         private void nameComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             productName = nameComboBox.SelectedItem.ToString();
 
-            Product product = db.GetProduct(productName, language)[0];
-            FillProductFields(product);
+            productDetailed = db.GetProduct(productName, language)[0];
+            FillProductFields(productDetailed);
             editOkButton.Enabled = true;
         }
 
@@ -208,40 +213,24 @@ namespace BrowserProducts
             // All the fields are correct and they assign to the object to do the update about it
             else
             {
-                
                 productDetailed.Name = nameComboBox.SelectedItem.ToString();
                 productDetailed.Description = descriptionTextBox.Text;
                 productDetailed.ProductNumber = productNumberTextBox.Text;
                 productDetailed.ProductModelId = int.Parse(productModelIdTextBox.Text);
 
-                if (makeFlagCheckBox.Checked)
-                    productDetailed.MakeFlag = 1;
-                else
-                    productDetailed.MakeFlag = 0;
+                productDetailed.MakeFlag = (makeFlagCheckBox.Checked == true) ? (byte)1 :(byte) 0;
+                productDetailed.FinishedGoodsFlag = (makeFlagCheckBox.Checked == true) ? (byte)1 : (byte)0;
 
-                if (finishedGoodsFlagCheckBox.Checked)
-                    productDetailed.FinishedGoodsFlag = 1;
-                else
-                    productDetailed.FinishedGoodsFlag = 0;
-//////////////TRYING 
-               // productDetailed.ProductSubcategory = db.FromSubCatNameToSubCatId(subCategoryComboBox.SelectedItem.ToString());
-                //productDetailed.Color = colorComboBox.SelectedItem.ToString();
+                productDetailed.ProductSubcategory = db.FromSubCatNameToSubCatId(subCategoryComboBox.SelectedItem.ToString());
                 productDetailed.DaysToManufacture = (int)daysToManufactureNumericUpDown.Value;
-                //productDetailed.ProductLine = productLineComboBox.SelectedItem.ToString();
-                //productDetailed.Class = classComboBox.SelectedItem.ToString();
-                //productDetailed.Style = styleComboBox.SelectedItem.ToString();
-                productDetailed.StandardCost = standardCost;
-                productDetailed.ListPrice = listPrice;
                 productDetailed.SafetyStockLevel = (int)safetyStockLevelNumericUpDown.Value;
                 productDetailed.ReorderPoint = (int)reorderPointNumericUpDown.Value;
-                //productDetailed.Size = sizeComboBox.SelectedItem.ToString();
-                //productDetailed.SizeUnitMeasure = sizeUnitMeasureComboBox.SelectedItem.ToString();
                 productDetailed.Weight = weight;
-                productDetailed.SellStartDate = sellStartDate = DateTime.ParseExact(sellStartDateTextBox.Text, "dd/MM/yyyy hh:mm:ss", null);
-                productDetailed.SellEndDate =  DateTime.ParseExact("20/11/2019 00:00:00", "dd/MM/yyyy hh:mm:ss", null);
-                productDetailed.DiscontinuedDate = DateTime.ParseExact("21/11/2019 00:00:00", "dd/MM/yyyy hh:mm:ss", null);
-                productDetailed.ModifiedDate = DateTime.Now;
+                string v = DateTime.Now.ToString("MM-dd-yyyy HH:mm:ss");
+                productDetailed.ModifiedDate = DateTime.Parse(v);
 
+
+                
                 //do the update from DataAccess Class
                 db.UpdateProduct(productDetailed);
 
@@ -263,68 +252,19 @@ namespace BrowserProducts
                 FillProductFields(product);
                 EnabledOrDisableEdition(false);
                 editOkButton.Enabled = true;
+                this.DialogResult = System.Windows.Forms.DialogResult.Abort;
+                this.Close();
+
             }
             
         }
         //validating standardCost
         private void standarCostTextBox_Validating(object sender, CancelEventArgs e)
         {
-            try
-            {
-                standardCost = float.Parse(standarCostTextBox.Text);
-
-                if (standardCost < 0) throw new ArgumentException();
-
-            }
-            catch(ArgumentException)
-            {
-                MessageBox.Show("The value must be positive");
-                standarCostTextBox.Text = "";
-                standarCostTextBox.Focus();
-
-            }
-            catch(FormatException)
-            {
-                MessageBox.Show("It must be a NUMBER");
-                standarCostTextBox.Text = "";
-                standarCostTextBox.Focus();
-            }
+          
 
         }
-        //Validating listPrice
-        private void listPriceTextBox_TextChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                listPrice = float.Parse(listPriceTextBox.Text);
 
-                if (standardCost > listPrice)
-                {
-                    throw new Exception();
-                }
-                if (listPrice < 0)
-                {
-                    throw new ArgumentException();
-                }
-            }
-            catch (FormatException)
-            {
-                MessageBox.Show("It must be a NUMBER");
-                listPriceTextBox.Text = "";
-                listPriceTextBox.Focus();
-            }
-            catch (ArgumentException)
-            {
-                MessageBox.Show("Only Positive Numbers please");
-                listPriceTextBox.Text = "";
-                listPriceTextBox.Focus();
-            }
-            catch (Exception)
-            {
-                MessageBox.Show("ATTENTION, IT MAY CAUSE LOST OF MONEY");
-                listPriceTextBox.Focus();
-            }
-        }
 
         //Validating the weight
         private void weightTextBox_Validating(object sender, CancelEventArgs e)
@@ -350,49 +290,7 @@ namespace BrowserProducts
                 weightTextBox.Focus();
             }
         }
-        //Validating sellStartDate NOT WORKING 
-        private void sellStartDateTextBox_Validating(object sender, CancelEventArgs e)
-        {
-            try
-            {
-                sellStartDate = DateTime.ParseExact(sellStartDateTextBox.Text, "dd/MM/yyyy hh:mm:ss", null);
-            }
-            //not working....
-            //catch (NullReferenceException)
-            //{
-            //    MessageBox.Show("Are you sure to leave the product without sell start date?");
-            //}
-            catch (FormatException fe)
-            {
-                MessageBox.Show(fe.Message);
-                MessageBox.Show("Please use the format 'dd/MM/YYYY'");
-                sellStartDateTextBox.Text = "";
-                sellStartDateTextBox.Focus();
-            }
-        }
-        //Validating sellEndDate NOT WORKING 
-        private void sellEndDateTextBox_Validating(object sender, CancelEventArgs e)
-        {
-            try
-            {
-                sellEndDate = DateTime.Parse(sellEndDateTextBox.Text);
-                sellEndDate.ToShortDateString();
 
-                if (sellEndDate < sellStartDate) throw new ArgumentException();
-            }
-            catch (FormatException fe)
-            {
-                MessageBox.Show(fe.Message);
-                MessageBox.Show("Please use the format 'dd/MM/YYYY'");
-                sellStartDateTextBox.Text = "";
-                sellStartDateTextBox.Focus();
-            }
-            catch (ArgumentException)
-            {
-                MessageBox.Show("The sell end date must be greater than the sell start date");
-            }
-            
-        }
         //Validating the product color 
         private void colorComboBox_Validated(object sender, EventArgs e)
         {
@@ -458,20 +356,9 @@ namespace BrowserProducts
             }
         }
         //Validating the product sizeUnitMeasure
-        private void sizeUnitMeasureComboBox_Validating(object sender, CancelEventArgs e)
+        private void sizeUnitMeasureComboBox_Validated(object sender, CancelEventArgs e)
         {
-            try
-            {
-                productDetailed.SizeUnitMeasure = sizeUnitMeasureComboBox.SelectedItem.ToString();
-            }
-            catch (ArgumentNullException)
-            {
-                MessageBox.Show("ArgumentNullException");
-            }
-            catch (NullReferenceException)
-            {
-                MessageBox.Show("NullReferenceException");
-            }
+            
         }
         //Validating the product weightUnitMeasure NOT WORKING( NOT GET TO RELATION BETWEEN sizeUnitMeasure and weightUnitMeasure
         private void weightUnitMeasureComboBox_Validated(object sender, EventArgs e)
@@ -495,11 +382,13 @@ namespace BrowserProducts
             try
             {
                 discontinuedDate = DateTime.Parse(discontinuedDateTextBox.Text);
-                discontinuedDate.ToShortDateString();
+                discontinuedDate.ToString("MM-dd-yyyy HH:mm");
+                productDetailed.DiscontinuedDate = discontinuedDate;
+
             }
             catch (FormatException)
             {
-                discontinuedDate = DateTime.Parse("1/1/1753");
+                discontinuedDate = DateTime.ParseExact("01/01/1753 00:00", "MM-dd-yyyy HH:mm",null);
             }
         }
 
@@ -507,15 +396,17 @@ namespace BrowserProducts
         {
             try
             {
-                sellEndDate = DateTime.Parse(sellEndDateTextBox.Text);
-                sellEndDate.ToShortDateString();
+                sellStartDate = DateTime.Parse(sellStartDateTextBox.Text);
+                sellStartDate.ToString("MM-dd-yyyy HH:mm");
+                productDetailed.SellStartDate = sellStartDate;
+
 
                 if (sellEndDate < sellStartDate) throw new ArgumentException();
             }
             catch (FormatException fe)
             {
                 MessageBox.Show(fe.Message);
-                MessageBox.Show("Please use the format 'dd/MM/YYYY'");
+                MessageBox.Show("Please use the format 'MM/dd/YYYY'");
                 sellStartDateTextBox.Text = "";
                 sellStartDateTextBox.Focus();
             }
@@ -534,6 +425,131 @@ namespace BrowserProducts
             catch(ArgumentNullException)
             {
                 MessageBox.Show("A subcategory must be selected");
+            }
+        }
+
+        private void classComboBox_Validated(object sender, EventArgs e)
+        {
+            try
+            {
+                productDetailed.Class = classComboBox.SelectedItem.ToString();
+            }
+            catch (ArgumentNullException)
+            {
+                MessageBox.Show("ArgumentNullException");
+            }
+            catch (NullReferenceException)
+            {
+                MessageBox.Show("NullReferenceException");
+            }
+        }
+
+        private void weightTextBox_Validated(object sender, EventArgs e)
+        {
+            try
+            {
+                weight = float.Parse(weightTextBox.Text);
+
+                if (weight < 0) throw new ArgumentException();
+
+
+            }
+            catch (ArgumentException)
+            {
+                MessageBox.Show("The value must be positive");
+                weightTextBox.Text = "";
+                weightTextBox.Focus();
+
+            }
+            catch (FormatException)
+            {
+                MessageBox.Show("It must be a NUMBER");
+                weightTextBox.Text = "";
+                weightTextBox.Focus();
+            }
+
+        }
+
+        private void sellEndDateTextBox_Validated(object sender, EventArgs e)
+        {
+            try
+            {
+                sellEndDate = DateTime.Parse(sellEndDateTextBox.Text);
+                sellEndDate.ToShortDateString();
+                productDetailed.SellEndDate = sellEndDate;
+
+                if (sellEndDate < sellStartDate) throw new ArgumentException();
+            }
+            catch (FormatException fe)
+            {
+                MessageBox.Show(fe.Message);
+                MessageBox.Show("Please use the format 'dd/MM/YYYY'");
+                sellStartDateTextBox.Text = "";
+                sellStartDateTextBox.Focus();
+            }
+            catch (ArgumentException)
+            {
+                MessageBox.Show("The sell end date must be greater than the sell start date");
+            }
+
+        }
+
+        private void standarCostTextBox_Validated(object sender, EventArgs e)
+        {
+            try
+            {
+                standardCost = float.Parse(standarCostTextBox.Text);
+                productDetailed.StandardCost = standardCost;
+
+                if (standardCost < 0) throw new ArgumentException();
+
+            }
+            catch (ArgumentException)
+            {
+                MessageBox.Show("The value must be positive");
+                standarCostTextBox.Text = "";
+                standarCostTextBox.Focus();
+
+            }
+            catch (FormatException)
+            {
+                MessageBox.Show("It must be a NUMBER");
+                standarCostTextBox.Text = "";
+                standarCostTextBox.Focus();
+            }
+        }
+        //Validating list price of the product
+        private void listPriceTextBox_Validated(object sender, EventArgs e)
+        {
+            try
+            {
+                listPrice = float.Parse(listPriceTextBox.Text);
+
+                if (standardCost > listPrice)
+                {
+                    throw new Exception();
+                }
+                if (listPrice < 0)
+                {
+                    throw new ArgumentException();
+                }
+            }
+            catch (FormatException)
+            {
+                MessageBox.Show("It must be a NUMBER");
+                listPriceTextBox.Text = "";
+                listPriceTextBox.Focus();
+            }
+            catch (ArgumentException)
+            {
+                MessageBox.Show("Only Positive Numbers please");
+                listPriceTextBox.Text = "";
+                listPriceTextBox.Focus();
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("ATTENTION, IT MAY CAUSE LOST OF MONEY");
+                listPriceTextBox.Focus();
             }
         }
     }
